@@ -25,7 +25,7 @@
       </configuration>
     </facet>
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="3" platform="JVM 1.6" allPlatforms="JVM [1.6]" useProjectSettings="false" pureKotlinSourceFolders="$MODULE_DIR$/src/debug/kotlin;/Users/lyqht/Documents/finddine/app/src/debug/java;/Users/lyqht/Documents/finddine/app/src/release/kotlin;/Users/lyqht/Documents/finddine/app/src/release/java;/Users/lyqht/Documents/finddine/app/src/debugAndroidTest/kotlin;/Users/lyqht/Documents/finddine/app/src/debugUnitTest/kotlin;/Users/lyqht/Documents/finddine/app/src/releaseUnitTest/kotlin">
+      <configuration version="3" platform="JVM 1.6" allPlatforms="JVM [1.6]" useProjectSettings="false" pureKotlinSourceFolders="$MODULE_DIR$/src/debug/kotlin;/Users/lyqht/Documents/find-dine/app/src/debug/java;/Users/lyqht/Documents/find-dine/app/src/release/kotlin;/Users/lyqht/Documents/find-dine/app/src/release/java;/Users/lyqht/Documents/find-dine/app/src/debugAndroidTest/kotlin;/Users/lyqht/Documents/find-dine/app/src/debugUnitTest/kotlin;/Users/lyqht/Documents/find-dine/app/src/releaseUnitTest/kotlin">
         <compilerSettings>
           <option name="additionalArguments" value="-Xallow-no-source-files" />
         </compilerSettings>
