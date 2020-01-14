@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
 import android.net.wifi.rtt.RangingRequest
 import android.net.wifi.rtt.RangingResult
+import android.net.wifi.rtt.ResponderLocation
 import android.net.wifi.rtt.RangingResultCallback
 import android.net.wifi.rtt.WifiRttManager
 import android.os.Bundle
@@ -55,7 +56,7 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
     // Max sample size to calculate average for
     // 1. Distance to device (getDistanceMm) over time
     // 2. Standard deviation of the measured distance to the device (getDistanceStdDevMm) over time
-    // Note: A RangeRequest result already consists of the average of 7 readings from a burst,
+    // NOTE: A RangeRequest result already consists of the average of 7 readings from a burst,
     // so the average in (1) is the average of these averages.
     private var mSampleSize: Int = 0
 

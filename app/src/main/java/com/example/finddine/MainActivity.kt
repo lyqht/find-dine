@@ -38,10 +38,6 @@ class MainActivity : AppCompatActivity(), MyAdapter.ScanResultClickListener {
 
     private var mAdapter: MyAdapter? = null
 
-    companion object {
-        const val REQUEST_CODE_ACCESS_COARSE_LOCATION = 1
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -151,6 +147,7 @@ class MainActivity : AppCompatActivity(), MyAdapter.ScanResultClickListener {
                                 + " APs discovered, "
                                 + mAccessPointsSupporting80211mc.size
                                 + " RTT capable."
+
                     )
 
                 } else {
