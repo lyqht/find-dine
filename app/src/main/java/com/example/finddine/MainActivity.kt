@@ -1,64 +1,163 @@
 package com.example.finddine
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.net.wifi.ScanResult
+import android.net.wifi.WifiManager
 import android.net.wifi.rtt.RangingRequest
-import android.net.wifi.rtt.RangingResultCallback
-import android.net.wifi.rtt.WifiRttManager
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MyAdapter.ScanResultClickListener {
+
+    private val TAG = "MainActivity"
+
+    private val SCAN_RESULT_EXTRA = "com.example.android.wifirttscan.extra.SCAN_RESULT"
+
+    private var mLocationPermissionApproved = false
+
+    var mAccessPointsSupporting80211mc: MutableList<ScanResult> = mutableListOf()
+
+    private var mWifiManager: WifiManager? = null
+    private var mWifiScanReceiver: WifiScanReceiver? = null
+
+    private var mOutputTextView: TextView? = null
+    private var mRecyclerView: RecyclerView? = null
+
+    private var mAdapter: MyAdapter? = null
+
+    companion object {
+        const val REQUEST_CODE_ACCESS_COARSE_LOCATION = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        mOutputTextView = findViewById(R.id.access_point_summary_text_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
 
-        val filter = IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED)
-        val rttManager = getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
+        // Improve performance if you know that changes in content do not change the layout size
+        // of the RecyclerView
+        mRecyclerView?.setHasFixedSize(true)
 
-        //Make sure that you register the broadcast receiver before checking availability.
-        // Otherwise, there could be a period of time when the app thinks that
-        // Wi-Fi RTT is available but isn't notified if availability changes.
+        // use a linear layout manager
+        val layoutManager = LinearLayoutManager(this)
+        mRecyclerView?.setLayoutManager(layoutManager)
 
-//        val myReceiver = object: BroadcastReceiver() {
-//            override fun onReceive(context: Context, intent: Intent) {
-//                if (rttManager.isAvailable) {
-//                    val request: RangingRequest
-//
-//                    rttManager.startRanging(request, executor, object : RangingResultCallback() {
-//                        override fun onRangingResults(results: List<RangingResult>) { … }
-//
-//                        override fun onRangingFailure(code: Int) { … }
-//                    })
-//
-//                } else {
-//                    //
-//                }
-//            }
-//        }
-//        context.registerReceiver(myReceiver, filter)
-//
-//        val mgr = context.getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
-//        val request: RangingRequest = myRequest
-//        mgr.startRanging(request, executor, object : RangingResultCallback() {
-//
-//            override fun onRangingResults(results: List<RangingResult>) { … }
-//
-//            override fun onRangingFailure(code: Int) { … }
-//        })
+        mAdapter = MyAdapter(mAccessPointsSupporting80211mc, this);
+        mRecyclerView?.setAdapter(mAdapter);
+
+        mWifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
+        mWifiScanReceiver = WifiScanReceiver()
+
     }
 
+    override fun onResume() {
 
+        Log.d(TAG, "onResume()")
+        super.onResume()
+
+        mLocationPermissionApproved = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        registerReceiver(
+            mWifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+        )
+    }
+
+    override fun onPause() {
+        Log.d(TAG, "onPause()")
+        super.onPause()
+        unregisterReceiver(mWifiScanReceiver)
+    }
+
+    private fun logToUi(message: String) {
+        if (!message.isEmpty()) {
+            Log.d(TAG, message)
+            mOutputTextView?.setText(message)
+        }
+    }
+
+    override fun onScanResultItemClick(scanResult: ScanResult?) {
+        Log.d(TAG, "onScanResultItemClick(): ssid: " + scanResult?.SSID)
+
+        val intent = Intent(this, AccessPointRangingResultsActivity::class.java)
+        intent.putExtra(SCAN_RESULT_EXTRA, scanResult)
+        startActivity(intent)
+    }
+
+    fun onClickFindDistancesToAccessPoints(view: View) {
+        if (mLocationPermissionApproved) {
+            logToUi(getString(R.string.retrieving_access_points))
+            mWifiManager?.startScan()
+
+        } else {
+            // On 23+ (M+) devices, fine location permission not granted. Request permission.
+            val startIntent = Intent(this, LocationPermissionRequestActivity::class.java)
+            startActivity(startIntent)
+        }
+    }
+
+    private inner class WifiScanReceiver : BroadcastReceiver() {
+
+        private fun find80211mcSupportedAccessPoints(
+            originalList: MutableList<ScanResult>
+        ): MutableList<ScanResult> {
+            val newList = mutableListOf<ScanResult>()
+
+            for (scanResult in originalList) {
+
+                if (scanResult.is80211mcResponder) {
+                    newList.add(scanResult)
+                }
+
+                if (newList.size >= RangingRequest.getMaxPeers()) {
+                    break
+                }
+            }
+            return newList
+        }
+
+        // This is checked via mLocationPermissionApproved boolean
+        @SuppressLint("MissingPermission")
+        override fun onReceive(context: Context, intent: Intent) {
+
+            val scanResults = mWifiManager?.getScanResults()
+
+            if (scanResults != null) {
+
+                if (mLocationPermissionApproved) {
+                    mAccessPointsSupporting80211mc = find80211mcSupportedAccessPoints(scanResults!!)
+
+                    mAdapter?.swapData(mAccessPointsSupporting80211mc)
+
+                    logToUi(
+                        (scanResults!!.size).toString()
+                                + " APs discovered, "
+                                + mAccessPointsSupporting80211mc.size
+                                + " RTT capable."
+                    )
+
+                } else {
+                    // TODO (jewalker): Add Snackbar regarding permissions
+                    Log.d(TAG, "Permissions not allowed.")
+                }
+            }
+        }
+    }
 }
