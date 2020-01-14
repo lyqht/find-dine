@@ -1,4 +1,4 @@
-package com.example.finddine
+package com.example.finddine.DevMenu
 
 import android.Manifest
 import android.content.Context
@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
 import android.net.wifi.rtt.RangingRequest
 import android.net.wifi.rtt.RangingResult
-import android.net.wifi.rtt.ResponderLocation
 import android.net.wifi.rtt.RangingResultCallback
 import android.net.wifi.rtt.WifiRttManager
 import android.os.Bundle
@@ -18,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.finddine.R
 import java.util.ArrayList
 
 class AccessPointRangingResultsActivity : AppCompatActivity() {
@@ -299,8 +299,7 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         applicationContext,
-                        R.string
-                            .mac_mismatch_message_activity_access_point_ranging_results,
+                        R.string.mac_mismatch_message_activity_access_point_ranging_results,
                         Toast.LENGTH_LONG
                     )
                         .show()

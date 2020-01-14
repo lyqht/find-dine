@@ -1,4 +1,4 @@
-package com.example.finddine
+package com.example.finddine.DevMenu
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,9 +18,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.finddine.R
 
-class MainActivity : AppCompatActivity(), MyAdapter.ScanResultClickListener {
+class MainActivity : AppCompatActivity(),
+    MyAdapter.ScanResultClickListener {
 
     private val TAG = "MainActivity"
 

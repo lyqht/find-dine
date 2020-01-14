@@ -17,7 +17,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccessPointRangingResultsActivity">
+    tools:context=".DevMenu.AccessPointRangingResultsActivity">
 
     <TextView
         android:id="@+id/ssid"
@@ -339,9 +339,9 @@
         android:id="@+id/reset_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="@dimen/activity_access_point_ranging_request_margin_end"
         android:layout_marginStart="@dimen/activity_access_point_ranging_request_margin_start"
+        android:layout_marginEnd="@dimen/activity_access_point_ranging_request_margin_end"
+        android:layout_marginBottom="8dp"
         android:onClick="onResetButtonClick"
         android:text="@string/reset_label_activity_access_point_ranging_results"
         app:layout_constraintBottom_toBottomOf="parent"

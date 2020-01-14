@@ -1,4 +1,4 @@
-package com.example.finddine
+package com.example.finddine.DevMenu
 
 import android.net.wifi.ScanResult
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.ViewGroup
-
+import com.example.finddine.R
 
 
 class MyAdapter() : RecyclerView.Adapter<ViewHolder>() {

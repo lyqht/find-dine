@@ -1,4 +1,4 @@
-package com.example.finddine
+package com.example.finddine.DevMenu
 
 
 /*
@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import com.example.finddine.R
 
 /**
  * This is a simple splash screen (activity) for giving more details on why the user should approve
