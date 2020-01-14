@@ -6,7 +6,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.finddine.DevMenu.MainActivity
 import com.example.finddine.R
-import kotlinx.android.synthetic.main.home_screen.*
+import kotlinx.android.synthetic.main.activity_home_screen.*
 
 class HomeScreen : AppCompatActivity() {
 
@@ -14,12 +14,9 @@ class HomeScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_screen)
-        setSupportActionBar(toolbar)
-
+        setContentView(R.layout.activity_home_screen)
         redirectButton = findViewById(R.id.redirect_button)
         val intent = Intent(this, MainActivity::class.java)
-
         redirectButton?.setOnClickListener { startActivity(intent) }
     }
 }

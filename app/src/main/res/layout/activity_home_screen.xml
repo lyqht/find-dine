@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ClientInterface.HomeScreen">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/venue_section_layout"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="#5F5F5F">
+
+            <Button
+                android:id="@+id/redirect_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="36dp"
+                android:backgroundTint="@color/button"
+                android:bottomLeftRadius="10dp"
+                android:bottomRightRadius="10dp"
+                android:padding="20dp"
+
+                android:text="@string/home_button"
+                android:textColor="@android:color/black"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/home_greeting_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="36dp"
+                android:text="@string/home_greeting"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/home_venue_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="36dp"
+                android:text="@string/home_venue"
+                android:textColor="@android:color/white"
+                android:textSize="48dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/home_greeting_text"
+                app:layout_constraintTop_toBottomOf="@+id/home_greeting_text" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <SearchView
+                android:id="@+id/home_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:iconifiedByDefault="false"
+                android:queryHint="@string/searchbar_hint"
+                android:outlineAmbientShadowColor="@color/colorAccent"
+                android:layout_marginBottom="12dp"
+                >
+            </SearchView>
+
+            <TextView
+                android:id="@+id/home_screen_recycler_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_recycler_view_title"
+                android:layout_below="@id/home_search_view"/>
+
+            <include layout="@layout/content_home_screen"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_below="@id/home_screen_recycler_title"
+                android:layout_marginBottom="6dp"/>
+
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
