@@ -9,14 +9,15 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="10dp"
+        android:layout_marginBottom="8sp"
         >
         <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingLeft="18sp"
+            android:paddingTop="16sp"
+            android:paddingBottom="16sp">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,16 +29,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="24dp"
+                    android:textSize="24sp"
                     android:layout_marginBottom="8dp"
                     android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:text="Stall Name"/>
                 <TextView
                     android:id="@+id/food_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="24dp"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/black"
                     android:text="Food Name"/>
             </LinearLayout>
 
@@ -46,8 +49,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:paddingRight="16dp"
+                android:textColor="@android:color/black"
+                android:paddingRight="20sp"
                 android:text="@string/review_stars_text"
+                android:textStyle="bold"
                 android:textSize="24dp" />
         </RelativeLayout>
 

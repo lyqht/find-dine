@@ -62,13 +62,13 @@ class MyAdapter() : RecyclerView.Adapter<ViewHolder>() {
         if (viewType == TYPE_HEADER) {
             viewHolder = ViewHolderHeader(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.recycler_row_header, parent, false)
+                    .inflate(R.layout.rtt_recycler_row_header, parent, false)
             )
 
         } else if (viewType == TYPE_ITEM) {
             viewHolder = ViewHolderItem(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.recycler_row_item, parent, false)
+                    .inflate(R.layout.rtt_recycler_row_item, parent, false)
             )
         } else {
             throw RuntimeException("$viewType isn't a valid view type.")
