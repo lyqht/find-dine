@@ -266,6 +266,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/success_ratio_value" />
 
+
+    <TextView
+        android:id="@+id/get_responder_location_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_access_point_ranging_request_margin_start"
+        android:layout_marginTop="@dimen/activity_access_point_ranging_request_margin_top"
+        android:gravity="start"
+        android:text="@string/get_responder_location_label_activity_access_point_ranging_results"
+        android:textAlignment="textStart"
+        android:textSize="@dimen/activity_access_point_ranging_request_item_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/number_of_requests_label" />
+
+    <TextView
+        android:id="@+id/get_responder_location_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_access_point_ranging_request_margin_end"
+        android:layout_marginTop="@dimen/activity_access_point_ranging_request_margin_top"
+        android:gravity="end"
+        android:text="@string/activity_access_point_ranging_results_requesting_default"
+        android:textAlignment="textEnd"
+        android:textSize="@dimen/activity_access_point_ranging_request_item_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/number_of_requests_value" />
+
     <View
         android:id="@+id/divider2"
         android:layout_width="0dp"
@@ -277,7 +304,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/number_of_requests_value" />
+        app:layout_constraintTop_toBottomOf="@+id/get_responder_location_value" />
 
     <TextView
         android:id="@+id/stats_window_size_label"

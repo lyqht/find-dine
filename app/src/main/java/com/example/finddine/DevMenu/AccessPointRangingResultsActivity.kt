@@ -4,10 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
-import android.net.wifi.rtt.RangingRequest
-import android.net.wifi.rtt.RangingResult
-import android.net.wifi.rtt.RangingResultCallback
-import android.net.wifi.rtt.WifiRttManager
+import android.net.wifi.rtt.*
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -40,6 +37,7 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
     private lateinit var mSuccessesInBurstTextView: TextView
     private lateinit var mSuccessRatioTextView: TextView
     private lateinit var mNumberOfRequestsTextView: TextView
+    private lateinit var mGetResponderLocationTextView: TextView
 
     private lateinit var mSampleSizeEditText: EditText
     private lateinit var mMillisecondsDelayBeforeNewRangingRequestEditText: EditText
@@ -92,6 +90,7 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
         mSuccessesInBurstTextView = findViewById(R.id.successes_in_burst_value)
         mSuccessRatioTextView = findViewById(R.id.success_ratio_value)
         mNumberOfRequestsTextView = findViewById(R.id.number_of_requests_value)
+        mGetResponderLocationTextView = findViewById(R.id.get_responder_location_value)
 
         mSampleSizeEditText = findViewById(R.id.stats_window_size_edit_value)
         mSampleSizeEditText.setText(SAMPLE_SIZE_DEFAULT.toString() + "")
@@ -288,6 +287,11 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
                         mSuccessRatioTextView.setText((successRatio).toString() + "%")
 
                         mNumberOfRequestsTextView.setText((mNumberOfRangeRequests).toString() + "")
+
+                        val mLciString = rangingResult.toString().split(",")[8].replace("lci=", "")
+                        val mLcrString = rangingResult.toString().split(",")[9].replace("lcr=", "")
+
+                        mGetResponderLocationTextView.setText(mLciString + ", " + mLcrString)
 
                     } else if ((rangingResult.status == RangingResult.STATUS_RESPONDER_DOES_NOT_SUPPORT_IEEE80211MC)) {
                         Log.d(TAG, "RangingResult failed (AP doesn't support IEEE80211 MC.")
