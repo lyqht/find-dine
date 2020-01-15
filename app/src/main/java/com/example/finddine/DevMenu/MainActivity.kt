@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(),
         private val SCAN_RESULT_EXTRA = "com.example.android.wifirttscan.extra.SCAN_RESULT"
 
         private var mLocationPermissionApproved = false
-        var mAccessPointsSupporting80211mc: MutableList<ScanResult> = mutableListOf()
+        private var mAccessPointsSupporting80211mc: MutableList<ScanResult> = mutableListOf()
         private var mWifiManager: WifiManager? = null
         private var mWifiScanReceiver: WifiScanReceiver? = null
 
