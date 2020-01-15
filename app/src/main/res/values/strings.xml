@@ -41,4 +41,8 @@
     <string name="home_venue">Timbre+</string>
     <string name="searchbar_hint">Search for dishes, stall or cuisine</string>
     <string name="home_recycler_view_title">Top Picks</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="review_stars_text">4.8 \u2605</string>
 </resources>
