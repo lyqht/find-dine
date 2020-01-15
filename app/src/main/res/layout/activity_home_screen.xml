@@ -92,7 +92,7 @@
                     android:backgroundTint="@color/button"
                     android:paddingHorizontal="25sp"
                     android:text="@string/home_button"
-                    android:contentDescription="@string/home_button"
+                    android:contentDescription="@string/change_hawker"
                     android:textAllCaps="false"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
