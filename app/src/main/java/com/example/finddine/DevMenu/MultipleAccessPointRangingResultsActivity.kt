@@ -2,6 +2,7 @@ package com.example.finddine.DevMenu
 
 import android.Manifest
 import android.content.Context
+import com.example.finddine.R
 import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
@@ -19,8 +20,9 @@ import androidx.core.app.ActivityCompat
 import java.util.ArrayList
 import com.lemmingapex.trilateration.TrilaterationFunction
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver
-import com.example.finddine.R
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
+
+
 
 
 data class APLocation(
@@ -275,17 +277,21 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
 
             Log.d(TAG, "multipleAPResult: $locationOfAPs")
 
-//            mRangeTextView.setText(((rangingResult.getDistanceMm() / 1000f)).toString() + "")
-//
-//            val positions = locationOfAPs.map { ap -> doubleArrayOf(
-//                ap.longitude, ap.latitude
-//            )}.toTypedArray()
-//            val distances = locationOfAPs.map { ap -> ap.getDistanceMean()}
-//            val solver = NonLinearLeastSquaresSolver(
-//                TrilaterationFunction(positions, distances),
-//                LevenbergMarquardtOptimizer()
-//            )
+            val positions = locationOfAPs.map { ap -> doubleArrayOf(
+                ap.longitude, ap.latitude
+            )}.toTypedArray()
+            val distances = locationOfAPs.map{ ap -> ap.getDistanceMean().toDouble() }.toDoubleArray()
+            val solver = NonLinearLeastSquaresSolver(
+                TrilaterationFunction(positions, distances),
+                LevenbergMarquardtOptimizer()
+            )
 
+            val optimum = solver.solve()
+
+
+            var centroid = optimum.getPoint().toArray();
+
+            mRangeTextView.text = centroid.toString()
             queueNextRangingRequest()
         }
 
