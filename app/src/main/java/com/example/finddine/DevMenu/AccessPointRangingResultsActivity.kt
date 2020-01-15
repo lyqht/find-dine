@@ -29,24 +29,24 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
     private val MILLISECONDS_DELAY_BEFORE_NEW_RANGING_REQUEST_DEFAULT = 1000
 
     // UI Elements.
-    private var mSsidTextView: TextView? = null
-    private var mBssidTextView: TextView? = null
+    private lateinit var mSsidTextView: TextView
+    private lateinit var mBssidTextView: TextView
 
-    private var mRangeTextView: TextView? = null
-    private var mRangeMeanTextView: TextView? = null
-    private var mRangeSDTextView: TextView? = null
-    private var mRangeSDMeanTextView: TextView? = null
-    private var mRssiTextView: TextView? = null
-    private var mSuccessesInBurstTextView: TextView? = null
-    private var mSuccessRatioTextView: TextView? = null
-    private var mNumberOfRequestsTextView: TextView? = null
+    private lateinit var mRangeTextView: TextView
+    private lateinit var mRangeMeanTextView: TextView
+    private lateinit var mRangeSDTextView: TextView
+    private lateinit var mRangeSDMeanTextView: TextView
+    private lateinit var mRssiTextView: TextView
+    private lateinit var mSuccessesInBurstTextView: TextView
+    private lateinit var mSuccessRatioTextView: TextView
+    private lateinit var mNumberOfRequestsTextView: TextView
 
-    private var mSampleSizeEditText: EditText? = null
-    private var mMillisecondsDelayBeforeNewRangingRequestEditText: EditText? = null
+    private lateinit var mSampleSizeEditText: EditText
+    private lateinit var mMillisecondsDelayBeforeNewRangingRequestEditText: EditText
 
     // Non UI variables.
-    private var mScanResult: ScanResult? = null
-    private var mMAC: String? = null
+    private lateinit var mScanResult: ScanResult
+    private lateinit var mMAC: String
 
     private var mNumberOfRangeRequests: Int = 0
     private var mNumberOfSuccessfulRangeRequests: Int = 0
@@ -70,7 +70,7 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
     private var mStatisticRangeSDHistoryEndIndex: Int = 0
     private var mStatisticRangeSDHistory: ArrayList<Int> = arrayListOf()
 
-    private var mWifiRttManager: WifiRttManager? = null
+    private lateinit var mWifiRttManager: WifiRttManager
     private var mRttRangingResultCallback: RttRangingResultCallback = RttRangingResultCallback()
 
     // Triggers additional RangingRequests with delay (mMillisecondsDelayBeforeNewRangingRequest).
@@ -94,11 +94,11 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
         mNumberOfRequestsTextView = findViewById(R.id.number_of_requests_value)
 
         mSampleSizeEditText = findViewById(R.id.stats_window_size_edit_value)
-        mSampleSizeEditText?.setText(SAMPLE_SIZE_DEFAULT.toString() + "")
+        mSampleSizeEditText.setText(SAMPLE_SIZE_DEFAULT.toString() + "")
 
         mMillisecondsDelayBeforeNewRangingRequestEditText =
             findViewById(R.id.ranging_period_edit_value)
-        mMillisecondsDelayBeforeNewRangingRequestEditText?.setText(
+        mMillisecondsDelayBeforeNewRangingRequestEditText.setText(
             MILLISECONDS_DELAY_BEFORE_NEW_RANGING_REQUEST_DEFAULT.toString() + ""
         )
 
@@ -110,10 +110,10 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
             finish()
         }
 
-        mMAC = mScanResult?.BSSID
+        mMAC = mScanResult.BSSID
 
-        mSsidTextView?.text = mScanResult?.SSID
-        mBssidTextView?.text = mScanResult?.BSSID
+        mSsidTextView.text = mScanResult.SSID
+        mBssidTextView.text = mScanResult.BSSID
 
         mWifiRttManager = getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
         mRttRangingResultCallback = RttRangingResultCallback()
@@ -129,20 +129,20 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
     }
 
     private fun resetData() {
-        mSampleSize = Integer.parseInt(mSampleSizeEditText?.getText().toString())
+        mSampleSize = Integer.parseInt(mSampleSizeEditText.getText().toString())
 
         mMillisecondsDelayBeforeNewRangingRequest = Integer.parseInt(
-            mMillisecondsDelayBeforeNewRangingRequestEditText?.getText().toString()
+            mMillisecondsDelayBeforeNewRangingRequestEditText.getText().toString()
         )
 
         mNumberOfSuccessfulRangeRequests = 0
         mNumberOfRangeRequests = 0
 
         mStatisticRangeHistoryEndIndex = 0
-        mStatisticRangeHistory?.clear()
+        mStatisticRangeHistory.clear()
 
         mStatisticRangeSDHistoryEndIndex = 0
-        mStatisticRangeSDHistory?.clear()
+        mStatisticRangeSDHistory.clear()
     }
 
     private fun startRangingRequest() {
@@ -164,7 +164,7 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
         val scanResult = mScanResult as ScanResult
         val rangingRequest = RangingRequest.Builder().addAccessPoint(scanResult).build()
 
-        mWifiRttManager?.startRanging(
+        mWifiRttManager.startRanging(
             rangingRequest, application.mainExecutor, mRttRangingResultCallback
         )
     }
@@ -262,22 +262,22 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
 
                         mNumberOfSuccessfulRangeRequests++
 
-                        mRangeTextView?.setText(((rangingResult.getDistanceMm() / 1000f)).toString() + "")
+                        mRangeTextView.setText(((rangingResult.getDistanceMm() / 1000f)).toString() + "")
                         addDistanceToHistory(rangingResult.distanceMm)
-                        mRangeMeanTextView?.setText(((getDistanceMean() / 1000f)).toString() + "")
+                        mRangeMeanTextView.setText(((getDistanceMean() / 1000f)).toString() + "")
 
-                        mRangeSDTextView?.setText(
+                        mRangeSDTextView.setText(
                             ((rangingResult.getDistanceStdDevMm() / 1000f)).toString() + ""
                         )
                         addStandardDeviationOfDistanceToHistory(
                             rangingResult.distanceStdDevMm
                         )
-                        mRangeSDMeanTextView?.setText(
+                        mRangeSDMeanTextView.setText(
                             ((getStandardDeviationOfDistanceMean() / 1000f)).toString() + ""
                         )
 
-                        mRssiTextView?.setText((rangingResult.getRssi()).toString() + "")
-                        mSuccessesInBurstTextView?.setText(
+                        mRssiTextView.setText((rangingResult.getRssi()).toString() + "")
+                        mSuccessesInBurstTextView.setText(
                             (rangingResult.getNumSuccessfulMeasurements()).toString()
                                     + "/"
                                     + rangingResult.numAttemptedMeasurements
@@ -285,9 +285,9 @@ class AccessPointRangingResultsActivity : AppCompatActivity() {
 
                         val successRatio =
                             (((mNumberOfSuccessfulRangeRequests.toFloat() / mNumberOfRangeRequests.toFloat())) * 100)
-                        mSuccessRatioTextView?.setText((successRatio).toString() + "%")
+                        mSuccessRatioTextView.setText((successRatio).toString() + "%")
 
-                        mNumberOfRequestsTextView?.setText((mNumberOfRangeRequests).toString() + "")
+                        mNumberOfRequestsTextView.setText((mNumberOfRangeRequests).toString() + "")
 
                     } else if ((rangingResult.status == RangingResult.STATUS_RESPONDER_DOES_NOT_SUPPORT_IEEE80211MC)) {
                         Log.d(TAG, "RangingResult failed (AP doesn't support IEEE80211 MC.")
