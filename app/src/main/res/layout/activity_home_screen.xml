@@ -26,24 +26,39 @@
                 android:layout_height="wrap_content"
                 android:background="#5F5F5F">
 
-                <Button
-                    android:id="@+id/redirect_button"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="36sp"
-                    android:layout_marginEnd="16sp"
-                    android:layout_marginBottom="36sp"
-                    android:backgroundTint="@color/button"
-                    android:paddingHorizontal="25sp"
-                    android:text="@string/home_button"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:0.6"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/home_greeting_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="36sp"
+                        android:layout_marginTop="24dp"
+                        android:contentDescription="@string/home_greeting"
+                        android:text="@string/home_greeting"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/home_venue_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="24dp"
+                        android:contentDescription="@string/home_venue"
+                        android:text="@string/home_venue"
+                        android:textColor="@android:color/white"
+                        android:textSize="48sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/home_greeting_text"
+                        app:layout_constraintTop_toBottomOf="@+id/home_greeting_text" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <Button
                     android:id="@+id/redirect_button2"
@@ -57,38 +72,37 @@
                     android:bottomRightRadius="10dp"
                     android:padding="20dp"
 
-                    android:text="MULTIPLE"
+                    android:text="@string/multiple"
                     android:textColor="@android:color/black"
 
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/redirect_button"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintVertical_bias="1.0"
+                    android:contentDescription="@string/multiple"/>
 
-                <TextView
-                    android:id="@+id/home_greeting_text"
+                <Button
+                    android:id="@+id/redirect_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="36sp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/home_greeting"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/home_venue_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:text="@string/home_venue"
-                    android:textColor="@android:color/white"
-                    android:textSize="48sp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="36sp"
+                    android:layout_marginEnd="16sp"
+                    android:layout_marginBottom="36sp"
+                    android:backgroundTint="@color/button"
+                    android:paddingHorizontal="25sp"
+                    android:text="@string/home_button"
+                    android:contentDescription="@string/home_button"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/home_greeting_text"
-                    app:layout_constraintTop_toBottomOf="@+id/home_greeting_text" />
+                    app:layout_constraintDimensionRatio="1:0.6"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
