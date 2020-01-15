@@ -23,7 +23,6 @@ class MyAdapter() : RecyclerView.Adapter<ViewHolder>() {
     private val TYPE_ITEM = 1
 
     private var sScanResultClickListener: ScanResultClickListener? = null
-
     private var mWifiAccessPointsWithRtt: MutableList<ScanResult> = mutableListOf()
 
 

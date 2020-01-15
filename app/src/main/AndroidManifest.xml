@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/CustomAppTheme">
         <activity
-            android:name=".ClientInterface.HomeScreen"
+            android:name=".ClientInterface.Activities.HomeScreen"
             android:label="@string/home_screen"
             android:theme="@style/CustomAppTheme.NoActionBar">
             <intent-filter>

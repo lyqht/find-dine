@@ -1,22 +1,22 @@
-package com.example.finddine.ClientInterface
+package com.example.finddine.ClientInterface.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.example.finddine.DevMenu.MainActivity
 import com.example.finddine.R
-import kotlinx.android.synthetic.main.activity_home_screen.*
+import com.example.finddine.databinding.ActivityHomeScreenBinding
 
 class HomeScreen : AppCompatActivity() {
 
-    private var redirectButton: Button? = null
+    private lateinit var binding: ActivityHomeScreenBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_screen)
-        redirectButton = findViewById(R.id.redirect_button)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home_screen)
+
         val intent = Intent(this, MainActivity::class.java)
-        redirectButton?.setOnClickListener { startActivity(intent) }
+        binding.redirectButton.setOnClickListener { startActivity(intent) }
     }
 }

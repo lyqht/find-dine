@@ -14,32 +14,38 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:paddingTop="@dimen/recycler_row_padding"
-    android:paddingBottom="@dimen/recycler_row_padding"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:textAlignment="center"
-        android:textSize="@dimen/recycler_row_header_text_size"
-        android:text="@string/recycler_row_header_label_ssid"
-        android:id="@+id/ssid_text_view"/>
+    <data>
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:textAlignment="center"
-        android:text="@string/recycler_row_header_label_bssid"
-        android:textSize="@dimen/recycler_row_header_text_size"
-        android:id="@+id/bssid_text_view"/>
-</LinearLayout>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="@dimen/recycler_row_padding"
+        android:paddingBottom="@dimen/recycler_row_padding"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:textSize="@dimen/recycler_row_header_text_size"
+            android:text="@string/recycler_row_header_label_ssid"
+            android:id="@+id/ssid_text_view" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:text="@string/recycler_row_header_label_bssid"
+            android:textSize="@dimen/recycler_row_header_text_size"
+            android:id="@+id/bssid_text_view" />
+    </LinearLayout>
+</layout>
