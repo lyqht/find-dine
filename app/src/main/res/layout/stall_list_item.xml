@@ -46,7 +46,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/reviews_stars_text"
+                android:id="@+id/stall_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -54,8 +54,7 @@
                 android:paddingRight="20sp"
                 android:text="@string/review_stars_text"
                 android:textStyle="bold"
-                android:textSize="24dp"
-                android:contentDescription="rating: 4.8 stars"/>
+                android:textSize="24dp"/>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

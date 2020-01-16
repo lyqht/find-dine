@@ -18,6 +18,7 @@ class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : Recycl
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val stallName = view.stall_name
         val foodName = view.food_name
+        val stallRating = view.stall_rating
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,6 +29,8 @@ class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : Recycl
         val item = items[position]
         holder?.stallName?.text = item.name
         holder?.foodName?.text = item.food
+        holder?.stallRating?.text = item.rating.toString() + "\u2605"
+        holder?.stallRating?.contentDescription = item.rating.toString() + "stars"
     }
 
 }
