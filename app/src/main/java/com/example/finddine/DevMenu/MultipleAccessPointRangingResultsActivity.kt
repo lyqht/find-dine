@@ -21,18 +21,16 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import java.util.ArrayList
 import com.lemmingapex.trilateration.TrilaterationFunction
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
-
-
+import java.util.*
 
 
 data class APLocation(
     val name: String,
     val location: String,
-    val macAddress:String,
+    val macAddress: String,
     val latitude: Double,
     val longitude: Double,
     var numberOfSuccessRequests: Int = 0,
@@ -102,6 +100,10 @@ data class APLocation(
         return distanceSum / statisticRangeHistory.size
     }
 
+    fun hasDistanceHistory(): Boolean {
+        return statisticRangeHistory.size != 0
+    }
+
     // Calculates standard deviation of the measured distance based on stored history.
     private fun getStandardDeviationOfDistanceMean(): Float {
         var distanceSdSum = 0f
@@ -125,6 +127,7 @@ data class APLocation(
     }
 
 }
+
 class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
     private val TAG = "APRRActivity"
 
@@ -158,11 +161,41 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
     private var scanResults: List<ScanResult> = listOf();
 
     private var locationOfAPs: List<APLocation> = listOf(
-        APLocation(name = "AP1", location = "Entrance", macAddress = "f0:72:ea:22:40:0d", latitude = 1.2997752863150822, longitude = 103.78912420378691),
-        APLocation(name = "AP2", location = "FGD Room", macAddress = "f0:72:ea:25:34:d5", latitude = 1.2999517743563445, longitude = 103.78912297367003),
-        APLocation(name = "AP3", location = "Open Space(Ping Pong)", macAddress = "f0:72:ea:3f:a2:c5", latitude = 1.2998518673161072, longitude = 103.78911880515608),
-        APLocation(name = "AP4", location = "Open Area", macAddress = "f0:72:ea:39:83:a5", latitude = 1.2999510917177304, longitude = 103.78921274179027),
-        APLocation(name = "AP5", location = "Nest Wifi", macAddress = "cc:f4:11:0a:b8:41", latitude = 0.0, longitude = 0.0)
+        APLocation(
+            name = "AP1",
+            location = "Entrance",
+            macAddress = "f0:72:ea:22:40:0d",
+            latitude = 1.2997752863150822,
+            longitude = 103.78912420378691
+        ),
+        APLocation(
+            name = "AP2",
+            location = "FGD Room",
+            macAddress = "f0:72:ea:25:34:d5",
+            latitude = 1.2999517743563445,
+            longitude = 103.78912297367003
+        ),
+        APLocation(
+            name = "AP3",
+            location = "Open Space(Ping Pong)",
+            macAddress = "f0:72:ea:3f:a2:c5",
+            latitude = 1.2998518673161072,
+            longitude = 103.78911880515608
+        ),
+        APLocation(
+            name = "AP4",
+            location = "Open Area",
+            macAddress = "f0:72:ea:39:83:a5",
+            latitude = 1.2999510917177304,
+            longitude = 103.78921274179027
+        ),
+        APLocation(
+            name = "AP5",
+            location = "Nest Wifi",
+            macAddress = "cc:f4:11:0a:b8:41",
+            latitude = 0.0,
+            longitude = 0.0
+        )
     )
     private var mMillisecondsDelayBeforeNewRangingRequest: Int = 0
 
@@ -192,46 +225,17 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
         successRatioTextView = findViewById(R.id.success_ratio_value)
         mNumberOfRequestsTextView = findViewById(R.id.number_of_requests_value)
 
-        wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
+        // Check compatibility
 
-        scanResults = wifiManager.scanResults.filter{ it.is80211mcResponder }
-
-        if (scanResults.isEmpty()) {
-            finish()
+        // Device supports wifi rtt
+        if (!this.packageManager.hasSystemFeature(PackageManager.FEATURE_WIFI_RTT)) {
+            Log.d(TAG, "Device does not support wifi rtt")
+            return
+        } else {
+            Log.d(TAG, "Device supports wifi rtt")
         }
 
-        ssidTextView.text = "${scanResults.size} AP"
-        mBssidTextView.text = "Granted?"
-        2
-        mWifiRttManager = getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
-
-        checkForLocationPermissions()
-        registerReceiver()
-    }
-
-    private fun registerReceiver() {
-        Log.d(TAG, "registerReceiver")
-
-        val filter = IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED)
-        val myReceiver = object: BroadcastReceiver() {
-
-            override fun onReceive(context: Context, intent: Intent) {
-                Log.d(TAG, "onReceive")
-
-                mWifiRttAvailable = mWifiRttManager.isAvailable()
-            }
-        }
-
-        this.registerReceiver(myReceiver, filter)
-        mWifiRttAvailable = mWifiRttManager.isAvailable()
-
-        resetData()
-        startRangingRequest()
-    }
-
-    private fun checkForLocationPermissions() {
-        Log.d(TAG, "checkForLocationPermissions")
-
+        // Device has location permissions
         mLocationPermissionApproved = ActivityCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -245,43 +249,61 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
             startActivity(startIntent)
         } else {
             Log.d(TAG, "Location permissions granted!")
-
         }
-    }
 
-    private fun isRttCompatible(): Boolean {
-        return mLocationPermissionApproved && mWifiRttAvailable
-    }
+        // Initialize scanning services
+        wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
+        mWifiRttManager = getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
 
-    private fun startRangingRequest() {
+        // Register wifi rtt receiver and set variable
+        Log.d(TAG, "registerReceiver")
+
+        val filter = IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED)
+        val myReceiver = object : BroadcastReceiver() {
+
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.d(TAG, "onReceive")
+
+                mWifiRttAvailable = mWifiRttManager.isAvailable()
+            }
+        }
+
+        this.registerReceiver(myReceiver, filter)
+        mWifiRttAvailable = mWifiRttManager.isAvailable()
+
+
+        // Start scanning for available wifi rtt devices
+        wifiManager.startScan()
+
+        scanResults = wifiManager.scanResults.filter { it.is80211mcResponder }
+        if (scanResults.isEmpty()) {
+            // TODO: Try to scan again before continuing
+            finish()
+        }
+
+        ssidTextView.text = "${scanResults.size} AP"
+        mBssidTextView.text = "Granted?"
+        2
+
+
+        // Start ranging request
+        resetData()
+
         Log.d(TAG, "Starting ranging request...")
 
-        if (isRttCompatible()) {
-            Log.d(TAG, "Device is Wifi Rtt compatible")
+        if (mWifiRttAvailable) {
+            Log.d(TAG, "Location permissions approved and wifi rtt available")
 
 //            logToUi(getString(R.string.retrieving_access_points))
-            onPermissionsReceived()
+
+
+            bumpNumberOfRequests()
+
+            startRangingRequest()
 
         } else {
             Log.d(TAG, "Device not Wifi Rtt compatible!")
         }
-
-    }
-
-    // This is checked via mLocationPermissionApproved boolean
-    @SuppressLint("MissingPermission")
-    private fun onPermissionsReceived() {
-        Log.d(TAG, "onPermissionsReceived")
-
-        wifiManager.startScan()
-
-        bumpNumberOfRequests()
-
-        val rangingRequest = RangingRequest.Builder().addAccessPoints(scanResults).build()
-
-        mWifiRttManager.startRanging(
-            rangingRequest, application.mainExecutor, mRttRangingResultCallback
-        )
     }
 
     private fun bumpNumberOfRequests() {
@@ -295,6 +317,16 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
 
     fun onResetButtonClick(view: View) {
         resetData()
+    }
+
+    // This is checked via mLocationPermissionApproved boolean
+    @SuppressLint("MissingPermission")
+    private fun startRangingRequest() {
+        val rangingRequest = RangingRequest.Builder().addAccessPoints(scanResults).build()
+
+        mWifiRttManager.startRanging(
+            rangingRequest, application.mainExecutor, mRttRangingResultCallback
+        )
     }
 
     // Class that handles callbacks for all RangingRequests and issues new RangingRequests.
@@ -315,19 +347,16 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
         override fun onRangingResults(results: List<RangingResult>) {
             Log.d(TAG, "onRangingResults(): $results")
 
-            // Because we are only requesting RangingResult for one access point (not multiple
-            // access points), this will only ever be one. (Use loops when requesting RangingResults
-            // for multiple access points.)
-
-
             results.forEach() { result ->
                 val macAddress = result.macAddress!!.toString()
-                val apLocation = locationOfAPs.find{ AP -> AP.macAddress == macAddress } ?: return
+                val apLocation = locationOfAPs.find { AP -> AP.macAddress == macAddress } ?: return
 
                 if (result.status == RangingResult.STATUS_SUCCESS) {
 
                     apLocation.numberOfSuccessRequests++
 //                    Add distance to this AP's history
+
+                    Log.d(TAG, "apLocation:, ${apLocation.name}, distanceMm: ${result.distanceMm}")
 
                     apLocation.addDistanceToHistory(result.distanceMm)
 
@@ -337,12 +366,23 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
 
             Log.d(TAG, "multipleAPResult: $locationOfAPs")
 
-            val positions = locationOfAPs.map { ap -> doubleArrayOf(
-                ap.longitude, ap.latitude
-            )}.toTypedArray()
-            val distances = locationOfAPs.map{ ap -> ap.getDistanceMean().toDouble() }.toDoubleArray()
+            var positions = arrayListOf<DoubleArray>()
+            var distances = arrayListOf<Double>()
+
+            locationOfAPs.forEach { ap ->
+                if (ap.hasDistanceHistory()) {
+                    positions.add(
+                        doubleArrayOf(
+                            ap.latitude, ap.longitude
+                        )
+                    )
+
+                    distances.add(ap.getDistanceMean().toDouble())
+                }
+            }
+
             val solver = NonLinearLeastSquaresSolver(
-                TrilaterationFunction(positions, distances),
+                TrilaterationFunction(positions.toTypedArray(), distances.toDoubleArray()),
                 LevenbergMarquardtOptimizer()
             )
 
@@ -351,9 +391,9 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
 
             var centroid = optimum.getPoint().toArray();
 
-            mRangeTextView.text = centroid.toString()
+            mRangeTextView.text = Arrays.toString(centroid)
             queueNextRangingRequest()
         }
 
-}
+    }
 }
