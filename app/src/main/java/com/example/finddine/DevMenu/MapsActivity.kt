@@ -1,5 +1,6 @@
 package com.example.finddine.DevMenu
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.finddine.R
@@ -22,7 +23,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var marker: Marker
 
     // RTT Service
-    private lateinit var wifiRttService: WifiRttService
+    private var wifiRttService: WifiRttService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +39,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onResume()
         // Initialize wifiRttService
         wifiRttService = WifiRttService(this)
-        wifiRttService.subscribeToUpdates(this::updateUserLatLng)
+
+        wifiRttService?.subscribeToUpdates(this::updateUserLatLng)
     }
 
     override fun onPause() {
         super.onPause()
-        wifiRttService.stopWifiRttService()
+        wifiRttService?.stopWifiRttService()
     }
 
     override fun onStop() {
         super.onStop()
-        wifiRttService.stopWifiRttService()
+        wifiRttService?.stopWifiRttService()
     }
 
     /**

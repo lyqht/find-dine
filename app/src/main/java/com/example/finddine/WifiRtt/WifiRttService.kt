@@ -184,12 +184,12 @@ class WifiRttService(val context: AppCompatActivity) {
     private var mMillisecondsDelayBeforeNewRangingRequest: Int = 500
 
 
-    private var mWifiRttManager: WifiRttManager
-    private var wifiManager: WifiManager
+    private lateinit var mWifiRttManager: WifiRttManager
+    private lateinit var wifiManager: WifiManager
     private var mRttRangingResultCallback: RttRangingResultCallback = RttRangingResultCallback()
     private var mTimer: TimerTask? = null
     private var stopTimer: Boolean = false
-    var myReceiver: BroadcastReceiver
+    private lateinit var myReceiver: BroadcastReceiver
 
     private lateinit var mOnUpdateHandler: (DoubleArray) -> Unit
 
@@ -200,11 +200,13 @@ class WifiRttService(val context: AppCompatActivity) {
     fun stopWifiRttService() {
         Log.d(TAG, "Stop wifi rtt service")
 
-        this.stopTimer = true
-        try {
-            LocalBroadcastManager.getInstance(context).unregisterReceiver(myReceiver)
-        } catch (e: Error) {
-            Log.d(TAG, "Could not destroy receiver", e)
+        if (mLocationPermissionApproved) {
+            this.stopTimer = true
+            try {
+                LocalBroadcastManager.getInstance(context).unregisterReceiver(myReceiver)
+            } catch (e: Error) {
+                Log.d(TAG, "Could not destroy receiver", e)
+            }
         }
     }
 
@@ -234,8 +236,12 @@ class WifiRttService(val context: AppCompatActivity) {
             context.startActivity(startIntent)
         } else {
             Log.d(TAG, "Location permissions granted!")
+            startService()
         }
 
+    }
+
+    fun startService() {
         // Initialize scanning services
         wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
         mWifiRttManager =

@@ -19,11 +19,7 @@ class TestActivity : AppCompatActivity() {
 
 
     // RTT Service
-    private lateinit var wifiRttService: WifiRttService
-
-    // Update lat long on interval
-    private val mUpdateLatLngHandler = Handler()
-    private var mMillisecondsDelayBeforeLatLngUpdate: Int = 1000
+    private var wifiRttService: WifiRttService? = null
 
     private var mNumOfUpdates: Int = 0
 
@@ -49,16 +45,17 @@ class TestActivity : AppCompatActivity() {
         super.onResume()
         // Initialize wifiRttService
         wifiRttService = WifiRttService(this)
-        wifiRttService.subscribeToUpdates(this::updateUserLatLng)
+
+        wifiRttService?.subscribeToUpdates(this::updateUserLatLng)
     }
 
     override fun onPause() {
         super.onPause()
-        wifiRttService.stopWifiRttService()
+        wifiRttService?.stopWifiRttService()
     }
 
     override fun onStop() {
         super.onStop()
-        wifiRttService.stopWifiRttService()
+        wifiRttService?.stopWifiRttService()
     }
 }
