@@ -22,7 +22,9 @@ class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : Recycl
         val stallName = view.stall_name
         val foodName = view.food_name
         val stallRating = view.stall_rating
+        val stallDistance = view.stall_distance
         val stallCard = view.stall_card
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,18 +34,19 @@ class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         val itemNum = position + 1
-        holder?.stallName?.text = itemNum.toString() + ". " + item.name
-        holder?.stallName?.contentDescription = itemNum.toString() + ". stall " + item.name
+        holder.stallName.text = itemNum.toString() + ". " + item.name
+        holder.stallName.contentDescription = itemNum.toString() + ". stall " + item.name
 
-        holder?.foodName?.text = item.food
-        holder?.foodName?.contentDescription = "famous for " + item.food
+        holder.foodName.text = item.food
+        holder.foodName.contentDescription = "famous for " + item.food
 
-        holder?.stallRating?.text = item.rating.toString() + "\u2605"
-        holder?.stallRating?.contentDescription = item.rating.toString() + "stars"
+        holder.stallRating.text = item.rating.toString() + "\u2605"
+        holder.stallRating.contentDescription = item.rating.toString() + "stars"
 
-        holder?.stallCard.isClickable = true
+        holder.stallDistance.text = item.distance.toString() + " m"
+        holder.stallDistance.contentDescription = item.distance.toString() + " meters away"
 
-        holder?.stallCard.setOnClickListener{ v:View ->
+        holder.stallCard.setOnClickListener{
             val intent = Intent(context, NavigationStart::class.java)
             intent.putExtra("name",item.name)
             context.startActivity(intent);

@@ -35,10 +35,10 @@ class HomeScreen : AppCompatActivity() {
     // TODO: function to add mock stalls' data
     // To pull google reviews data and store in sqllite / firebase instead.
     fun addStalls() {
-        stalls.add(Stall("Wang Jia Ban Mian", "Ban Mian", 4.8))
-        stalls.add(Stall("Fishball Story", "Fishball Noodle", 4.5))
-        stalls.add(Stall("Ah Tan Wings", "Chicken cutlet rice", 4.5))
-        stalls.add(Stall("Wong Kee Noodles", "Wanton Noodles", 4.5))
-        stalls.add(Stall("Geylang Prawn Noodles", "Prawn Noodles", 4.5))
+        stalls.add(Stall("Wang Jia Ban Mian", "Ban Mian", 4.8, 50))
+        stalls.add(Stall("Fishball Story", "Fishball Noodle", 4.5, 20))
+        stalls.add(Stall("Ah Tan Wings", "Chicken cutlet rice", 4.5, 50))
+        stalls.add(Stall("Wong Kee Noodles", "Wanton Noodles", 4.5, 10))
+        stalls.add(Stall("Geylang Prawn Noodles", "Prawn Noodles", 4.5, 120))
     }
 }

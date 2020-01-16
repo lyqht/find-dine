@@ -7,12 +7,10 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/stall_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8sp"
-        android:id="@+id/stall_card"
-        android:clickable="true"
-        android:focusable="true"
         >
         <RelativeLayout
             android:orientation="horizontal"
@@ -20,14 +18,13 @@
             android:layout_height="wrap_content"
             android:paddingLeft="18sp"
             android:paddingTop="16sp"
-            android:paddingBottom="16sp"
-            >
+            android:paddingBottom="16sp">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="20dp"
                 android:id="@+id/stall_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
                 >
                 <TextView
                     android:id="@+id/stall_name"
@@ -39,30 +36,44 @@
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
                     android:text="Stall Name"/>
+                <TextView
+                    android:id="@+id/food_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:text="Food Name"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/food_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="vertical"
+                android:layout_marginRight="20sp">
 
                 <TextView
                     android:id="@+id/stall_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:textColor="@android:color/black"
-                    android:paddingRight="20sp"
+                    android:layout_marginBottom="8dp"
                     android:text="@string/review_stars_text"
                     android:textStyle="bold"
-                    android:textSize="24dp"/>
+                    android:textSize="24dp" />
+
+                <TextView
+                    android:id="@+id/stall_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:text="Distance"/>
+
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/food_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="20sp"
-                android:layout_marginLeft="20dp"
-                android:textColor="@android:color/black"
-                android:layout_below="@+id/stall_info"
-                android:text="Food Name"/>
-
 
         </RelativeLayout>
 
