@@ -11,6 +11,7 @@ import com.example.finddine.ClientInterface.StallRecycler.StallAdaptor
 import com.example.finddine.DevMenu.MainActivity
 import com.example.finddine.DevMenu.MultipleAccessPointRangingResultsActivity
 import com.example.finddine.DevMenu.TestActivity
+import com.example.finddine.DevMenu.MapsActivity
 import com.example.finddine.R
 import com.example.finddine.databinding.ActivityHomeScreenBinding
 
@@ -25,6 +26,10 @@ class HomeScreen : AppCompatActivity() {
         // redirect to DevMenu Button
         val intent = Intent(this, TestActivity::class.java)
         binding.redirectButton.setOnClickListener { startActivity(intent) }
+
+
+        var mapIntent = Intent(this, MapsActivity::class.java)
+        binding.mapButton.setOnClickListener { startActivity(mapIntent) }
 
         // loading data and using the adaptor to create list item views for the recycler view
         addStalls()
