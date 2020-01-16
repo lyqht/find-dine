@@ -16,34 +16,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/CustomAppTheme">
+        <activity android:name=".ClientInterface.Activities.NavigationStart"></activity>
         <activity
             android:name=".ClientInterface.Activities.HomeScreen"
             android:label="@string/home_screen"
             android:theme="@style/CustomAppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".DevMenu.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/CustomAppTheme">
-
-        </activity>
+            android:theme="@style/CustomAppTheme"></activity>
         <activity
             android:name=".DevMenu.LocationPermissionRequestActivity"
             android:label="@string/title_activity_location_permission_request"
             android:parentActivityName=".DevMenu.MainActivity"
-            android:theme="@style/CustomAppTheme">
-        </activity>
+            android:theme="@style/CustomAppTheme"></activity>
         <activity
             android:name=".DevMenu.AccessPointRangingResultsActivity"
             android:label="@string/title_activity_access_point_ranging_results"
             android:parentActivityName=".DevMenu.MainActivity"
             android:theme="@style/CustomAppTheme" />
-
         <activity
             android:name=".DevMenu.MultipleAccessPointRangingResultsActivity"
             android:label="@string/title_activity_access_point_ranging_results"

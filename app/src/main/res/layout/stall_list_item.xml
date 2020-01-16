@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8sp"
+        android:id="@+id/stall_card"
+        android:clickable="true"
+        android:focusable="true"
         >
         <RelativeLayout
             android:orientation="horizontal"
@@ -18,12 +21,13 @@
             android:paddingLeft="18sp"
             android:paddingTop="16sp"
             android:paddingBottom="16sp"
-            android:focusable="true">
+            >
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_marginLeft="20dp"
+                android:id="@+id/stall_info"
                 >
                 <TextView
                     android:id="@+id/stall_name"
@@ -35,26 +39,31 @@
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
                     android:text="Stall Name"/>
+
                 <TextView
-                    android:id="@+id/food_name"
+                    android:id="@+id/stall_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="24sp"
+                    android:layout_alignParentRight="true"
                     android:textColor="@android:color/black"
-                    android:text="Food Name"/>
+                    android:paddingRight="20sp"
+                    android:text="@string/review_stars_text"
+                    android:textStyle="bold"
+                    android:textSize="24dp"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/stall_rating"
+                android:id="@+id/food_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
                 android:textColor="@android:color/black"
-                android:paddingRight="20sp"
-                android:text="@string/review_stars_text"
-                android:textStyle="bold"
-                android:textSize="24dp"/>
+                android:layout_below="@+id/stall_info"
+                android:text="Food Name"/>
+
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

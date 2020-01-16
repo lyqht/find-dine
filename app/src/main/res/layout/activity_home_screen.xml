@@ -39,6 +39,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="36sp"
                         android:layout_marginTop="24dp"
+                        android:contentDescription="@string/home_greeting"
                         android:text="@string/home_greeting"
                         android:textColor="@android:color/white"
                         android:textSize="20sp"
@@ -50,6 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="24dp"
+                        android:contentDescription="@string/home_venue"
                         android:text="@string/home_venue"
                         android:textColor="@android:color/white"
                         android:textSize="48sp"
@@ -62,17 +64,22 @@
                     android:id="@+id/redirect_button"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_marginEnd="40dp"
+                    android:layout_marginTop="36sp"
+                    android:layout_marginEnd="16sp"
+                    android:layout_marginBottom="36sp"
                     android:backgroundTint="@color/button"
-                    android:contentDescription="@string/change_hawker"
                     android:paddingHorizontal="25sp"
                     android:text="@string/home_button"
+                    android:contentDescription="@string/change_hawker"
                     android:textAllCaps="false"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:0.6"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
