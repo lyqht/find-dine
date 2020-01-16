@@ -5,12 +5,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.finddine.ClientInterface.Activities.NavigationStart
 import com.example.finddine.R.layout.stall_list_item
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.stall_list_item.view.*
 
 
@@ -48,6 +45,7 @@ class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : Recycl
 
         holder?.stallCard.setOnClickListener{ v:View ->
             val intent = Intent(context, NavigationStart::class.java)
+            intent.putExtra("name",item.name)
             context.startActivity(intent);
         }
 
