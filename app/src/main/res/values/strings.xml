@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <!-- Strings for LocationPermissionRequestActivity. -->
     <string name="action_settings">Settings</string>
@@ -55,6 +55,11 @@
     <string name="review_stars_text">4.8 \u2605</string>
     <string name="find_best_route">Calculating the fastest route for you...</string>
     <string name="directions_text">Directions to</string>
-    <string name="navigation_exit_text"><u>Exit Navigation</u></string>
+    <string name="navigation_exit_text">
+        <u>Exit Navigation</u>
+    </string>
 
+    <string name="multiple">MULTIPLE</string>
+    <string name="change_hawker">change hawker</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
