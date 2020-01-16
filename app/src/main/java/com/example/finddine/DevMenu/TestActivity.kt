@@ -16,6 +16,8 @@ class TestActivity : AppCompatActivity() {
 
     // UI Elements.
     private lateinit var mUserLatLngTextView: TextView
+    private lateinit var mNumOfUpdatesTextView: TextView
+
 
     // RTT Service
     private lateinit var wifiRttService: WifiRttService
@@ -24,6 +26,7 @@ class TestActivity : AppCompatActivity() {
     private val mUpdateLatLngHandler = Handler()
     private var mMillisecondsDelayBeforeLatLngUpdate: Int = 0
 
+    private var mNumOfUpdates: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +34,8 @@ class TestActivity : AppCompatActivity() {
 
         // Initializes UI elements.
         mUserLatLngTextView = findViewById(R.id.user_latlng_value)
+        mNumOfUpdatesTextView = findViewById(R.id.num_updates_value)
+
 
         // Initialize wifiRttService
         wifiRttService = WifiRttService(this)
@@ -42,8 +47,10 @@ class TestActivity : AppCompatActivity() {
         val curUserLocation = wifiRttService.getUserLocation()
         Log.d(TAG, "curUserLocation: ${Arrays.toString(curUserLocation)}")
 
+        mNumOfUpdates++
 
         mUserLatLngTextView.setText(Arrays.toString(curUserLocation))
+        mNumOfUpdatesTextView.setText(mNumOfUpdates.toString())
         intervalUpdateLatLng()
     }
 

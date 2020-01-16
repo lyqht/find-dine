@@ -53,18 +53,18 @@ data class AccessPoint(
     // Adds distance to history. If larger than sample size value, loops back over and replaces the
     // oldest distance record in the list.
     fun addDistanceToHistory(distance: Int) {
-        if (statisticRangeHistory.size >= sampleSize) {
+       if (statisticRangeHistory.size >= sampleSize) {
 
-            if (statisticRangeHistoryEndIndex >= sampleSize) {
-                statisticRangeHistoryEndIndex = 0
-            }
+           if (statisticRangeHistoryEndIndex >= sampleSize) {
+               statisticRangeHistoryEndIndex = 0
+           }
 
-            statisticRangeHistory[statisticRangeHistoryEndIndex] = distance
-            statisticRangeHistoryEndIndex++
+           statisticRangeHistory[statisticRangeHistoryEndIndex] = distance
+           statisticRangeHistoryEndIndex++
 
-        } else {
-            statisticRangeHistory.add(distance)
-        }
+       } else {
+           statisticRangeHistory.add(distance)
+       }
     }
 
 
@@ -177,8 +177,8 @@ class WifiRttService(val context: AppCompatActivity) {
             name = "AP5",
             location = "Nest Wifi",
             macAddress = "cc:f4:11:0a:b8:41",
-            latitude = 0.0,
-            longitude = 0.0
+            latitude = 1.300035,
+            longitude = 103.789334
         )
     )
     private var mMillisecondsDelayBeforeNewRangingRequest: Int = 0

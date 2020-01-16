@@ -37,6 +37,7 @@
     <!-- Strings for TestActivity. -->
     <string name="title_activity_test">Test Activity</string>
     <string name="user_lat_lng">User LatLng:</string>
+    <string name="num_updates">Updates:</string>
 
     <!-- Strings for Client Interface Home Activity. -->
     <string name="home_screen">Home Screen</string>
