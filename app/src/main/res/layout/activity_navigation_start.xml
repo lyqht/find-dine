@@ -11,30 +11,32 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ClientInterface.Activities.NavigationStart">
+        >
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/navigation_directions_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foregroundGravity="center"
-            app:layout_constraintStart_toStartOf="parent"
             app:cardElevation="5sp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <TextView
+                android:id="@+id/directions_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="20sp"
+                android:text="@string/directions_text"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
-                android:padding="20sp"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:id="@+id/directions_text"
-                android:text="@string/directions_text"/>
+                android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/instruction_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="12sp"
@@ -64,6 +66,38 @@
             android:selectAllOnFocus="false"
             android:linksClickable="false"
             android:autoLink="all"/>
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="20sp"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh_text"
+            android:textColor="@android:color/black"
+            android:backgroundTint="@android:color/white"
+            app:layout_constraintBottom_toTopOf="@+id/navigation_exit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:drawableLeft="@android:drawable/ic_menu_rotate"
+            android:drawableTint="@android:color/black"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/map_button"
+            android:importantForAccessibility="no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="2sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:text="Map"
+            android:backgroundTint="@android:color/white"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/navigation_directions_card" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

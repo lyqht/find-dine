@@ -55,9 +55,9 @@
     <string name="review_stars_text">4.8 \u2605</string>
     <string name="find_best_route">Calculating the fastest route for you...</string>
     <string name="directions_text">Directions to</string>
-    <string name="navigation_exit_text">
-        <u>Exit Navigation</u>
-    </string>
+    <string name="navigation_exit_text"><u>Exit Navigation</u></string>
+    <string name="refresh_text">Refresh Instructions</string>
+>>>>>>> Navigation Start Screen add Refresh Button and mock instructions
 
     <string name="multiple">MULTIPLE</string>
     <string name="change_hawker">change hawker</string>
