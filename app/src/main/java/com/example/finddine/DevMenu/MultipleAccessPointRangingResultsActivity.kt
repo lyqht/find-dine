@@ -2,6 +2,7 @@ package com.example.finddine.DevMenu
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -148,7 +149,10 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
     // Non UI variables.
     private lateinit var scanResult: ScanResult
     private lateinit var mMAC: String
+
+    // Permissions
     private var mLocationPermissionApproved = false
+    private var mWifiRttAvailable = false
 
 
     private var scanResults: List<ScanResult> = listOf();
@@ -201,45 +205,65 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
         2
         mWifiRttManager = getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
 
+        checkForLocationPermissions()
+        registerReceiver()
+    }
 
-        checkIfPermissionsGranted()
+    private fun registerReceiver() {
+        Log.d(TAG, "registerReceiver")
+
+        val filter = IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED)
+        val myReceiver = object: BroadcastReceiver() {
+
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.d(TAG, "onReceive")
+
+                mWifiRttAvailable = mWifiRttManager.isAvailable()
+            }
+        }
+
+        this.registerReceiver(myReceiver, filter)
+        mWifiRttAvailable = mWifiRttManager.isAvailable()
+
         resetData()
         startRangingRequest()
     }
 
-    override fun onResume() {
-        Log.d(TAG, "onResume()")
-        super.onResume()
+    private fun checkForLocationPermissions() {
+        Log.d(TAG, "checkForLocationPermissions")
 
-        checkIfPermissionsGranted()
-
-//        registerReceiver(
-//            mWifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
-//        )
-    }
-
-    private fun checkIfPermissionsGranted() {
         mLocationPermissionApproved = ActivityCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-    }
 
-    private fun startRangingRequest() {
-        Log.d(TAG, "Starting ranging request...")
-
-        if (mLocationPermissionApproved) {
-            Log.d(TAG, "Permission approved!")
-
-//            logToUi(getString(R.string.retrieving_access_points))
-            onPermissionsReceived()
-
-        } else {
+        if (!mLocationPermissionApproved) {
             Log.d(TAG, "Permission not given, starting intent to request permission")
 
             // On 23+ (M+) devices, fine location permission not granted. Request permission.
             val startIntent = Intent(this, LocationPermissionRequestActivity::class.java)
             startActivity(startIntent)
+        } else {
+            Log.d(TAG, "Location permissions granted!")
+
+        }
+    }
+
+    private fun isRttCompatible(): Boolean {
+        return mLocationPermissionApproved && mWifiRttAvailable
+    }
+
+    private fun startRangingRequest() {
+        Log.d(TAG, "Starting ranging request...")
+
+        if (isRttCompatible()) {
+            Log.d(TAG, "Device is Wifi Rtt compatible")
+
+//            logToUi(getString(R.string.retrieving_access_points))
+            onPermissionsReceived()
+
+        } else {
+            Log.d(TAG, "Device not Wifi Rtt compatible!")
         }
 
     }
@@ -247,6 +271,8 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
     // This is checked via mLocationPermissionApproved boolean
     @SuppressLint("MissingPermission")
     private fun onPermissionsReceived() {
+        Log.d(TAG, "onPermissionsReceived")
+
         wifiManager.startScan()
 
         bumpNumberOfRequests()
