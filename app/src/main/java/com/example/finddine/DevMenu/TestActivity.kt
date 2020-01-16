@@ -24,7 +24,7 @@ class TestActivity : AppCompatActivity() {
 
     // Update lat long on interval
     private val mUpdateLatLngHandler = Handler()
-    private var mMillisecondsDelayBeforeLatLngUpdate: Int = 0
+    private var mMillisecondsDelayBeforeLatLngUpdate: Int = 1000
 
     private var mNumOfUpdates: Int = 0
 

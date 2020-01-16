@@ -49,7 +49,7 @@ data class AccessPoint(
     // 2. Standard deviation of the measured distance to the device (getDistanceStdDevMm) over time
     // NOTE: A RangeRequest result already consists of the average of 7 readings from a burst,
     // so the average in (1) is the average of these averages.
-    val sampleSize: Int = 50
+    val sampleSize: Int = 10
 ) {
     // Adds distance to history. If larger than sample size value, loops back over and replaces the
     // oldest distance record in the list.
@@ -184,7 +184,7 @@ class WifiRttService(val context: AppCompatActivity) {
             longitude = 103.789334
         )
     )
-    private var mMillisecondsDelayBeforeNewRangingRequest: Int = 0
+    private var mMillisecondsDelayBeforeNewRangingRequest: Int = 500
 
     private var sampleSize: Int = 0
 
@@ -361,6 +361,7 @@ class WifiRttService(val context: AppCompatActivity) {
 
             // TODO: change to continuously return current centroid
             val centroidLatLng = cartesianToLatlng(centroid[0], centroid[1], centroid[2])
+            Log.d(TAG, "centroidLatLng: ${Arrays.toString(centroidLatLng)}")
             userLocation = centroidLatLng
             queueNextRangingRequest()
         }
