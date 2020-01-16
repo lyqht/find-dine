@@ -22,6 +22,7 @@ import com.lemmingapex.trilateration.TrilaterationFunction
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
 import java.util.*
+import kotlin.math.*
 
 
 data class AccessPoint(
@@ -53,18 +54,18 @@ data class AccessPoint(
     // Adds distance to history. If larger than sample size value, loops back over and replaces the
     // oldest distance record in the list.
     fun addDistanceToHistory(distance: Int) {
-       if (statisticRangeHistory.size >= sampleSize) {
+        if (statisticRangeHistory.size >= sampleSize) {
 
-           if (statisticRangeHistoryEndIndex >= sampleSize) {
-               statisticRangeHistoryEndIndex = 0
-           }
+            if (statisticRangeHistoryEndIndex >= sampleSize) {
+                statisticRangeHistoryEndIndex = 0
+            }
 
-           statisticRangeHistory[statisticRangeHistoryEndIndex] = distance
-           statisticRangeHistoryEndIndex++
+            statisticRangeHistory[statisticRangeHistoryEndIndex] = distance
+            statisticRangeHistoryEndIndex++
 
-       } else {
-           statisticRangeHistory.add(distance)
-       }
+        } else {
+            statisticRangeHistory.add(distance)
+        }
     }
 
 
@@ -87,11 +88,11 @@ data class AccessPoint(
     }
 
     // Calculates average distance based on stored history.
-    fun getDistanceMean(): Float {
-        var distanceSum = 0f
+    fun getDistanceMean(): Double {
+        var distanceSum = 0.0
 
         for (distance in statisticRangeHistory) {
-            distanceSum += distance.toFloat()
+            distanceSum += distance.toDouble()
         }
 
         return distanceSum / statisticRangeHistory.size
@@ -130,6 +131,8 @@ class WifiRttService(val context: AppCompatActivity) {
     private val TAG = "APRRActivity"
 
     val SCAN_RESULT_EXTRA = "com.example.android.wifirttscan.extra.SCAN_RESULT"
+
+    val EARTH_RADIUS_MM: Double = 6371008771.4
 
     private val SAMPLE_SIZE_DEFAULT = 50
     private val MILLISECONDS_DELAY_BEFORE_NEW_RANGING_REQUEST_DEFAULT = 1000
@@ -192,7 +195,7 @@ class WifiRttService(val context: AppCompatActivity) {
     // Triggers additional RangingRequests with delay (mMillisecondsDelayBeforeNewRangingRequest).
     internal val mRangeRequestDelayHandler = Handler()
 
-    public fun getUserLocation(): DoubleArray {
+    fun getUserLocation(): DoubleArray {
         return userLocation
     }
 
@@ -226,7 +229,8 @@ class WifiRttService(val context: AppCompatActivity) {
 
         // Initialize scanning services
         wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        mWifiRttManager = context.getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
+        mWifiRttManager =
+            context.getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
 
         // Register wifi rtt receiver and set variable
         Log.d(TAG, "registerReceiver")
@@ -319,7 +323,10 @@ class WifiRttService(val context: AppCompatActivity) {
                     accessPoint.numberOfSuccessRequests++
 //                    Add distance to this AP's history
 
-                    Log.d(TAG, "accessPoint:, ${accessPoint.name}, distanceMm: ${result.distanceMm}")
+                    Log.d(
+                        TAG,
+                        "accessPoint:, ${accessPoint.name}, distanceMm: ${result.distanceMm}"
+                    )
 
                     accessPoint.addDistanceToHistory(result.distanceMm)
 
@@ -335,12 +342,10 @@ class WifiRttService(val context: AppCompatActivity) {
             locationOfAPs.forEach { ap ->
                 if (ap.hasDistanceHistory()) {
                     positions.add(
-                        doubleArrayOf(
-                            ap.latitude, ap.longitude
-                        )
+                        latlngToCartersian(ap.latitude, ap.longitude)
                     )
 
-                    distances.add(ap.getDistanceMean().toDouble())
+                    distances.add(ap.getDistanceMean())
                 }
             }
 
@@ -355,10 +360,38 @@ class WifiRttService(val context: AppCompatActivity) {
             var centroid = optimum.getPoint().toArray();
 
             // TODO: change to continuously return current centroid
-//            mRangeTextView.text = Arrays.toString(centroid)
-            userLocation = centroid
+            val centroidLatLng = cartesianToLatlng(centroid[0], centroid[1], centroid[2])
+            userLocation = centroidLatLng
             queueNextRangingRequest()
         }
 
+        private fun latlngToCartersian(lat: Double, lng: Double): DoubleArray {
+//            x = R * cos(lat) * cos(lon)
+//
+//            y = R * cos(lat) * sin(lon)
+//
+//            z = R *sin(lat)
+
+            val latRads = (90 - lat) * Math.PI / 180
+            val lngRads = (180 - lng) * Math.PI / 180
+            val xPos = EARTH_RADIUS_MM * sin(latRads) * cos(lngRads)
+            val yPos = EARTH_RADIUS_MM * cos(latRads)
+            val zPos = EARTH_RADIUS_MM * sin(latRads) * sin(lngRads)
+
+            return doubleArrayOf(xPos, yPos, zPos)
+        }
+
+        private fun cartesianToLatlng(xPos: Double, yPos: Double, zPos: Double): DoubleArray {
+//            lat = asin(z / R)
+//            lon = atan2(y, x)
+
+            val latRads = acos(yPos / EARTH_RADIUS_MM)
+            val lngRads = atan2(zPos, xPos)
+
+            val lat = (Math.PI / 2 - latRads) * (180 / Math.PI)
+            val lng = (Math.PI - lngRads) * (180 / Math.PI)
+
+            return doubleArrayOf(lat, lng)
+        }
     }
 }
