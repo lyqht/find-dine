@@ -1,7 +1,10 @@
 package com.example.finddine.DevMenu
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import com.example.finddine.R
 import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
@@ -145,6 +148,8 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
     // Non UI variables.
     private lateinit var scanResult: ScanResult
     private lateinit var mMAC: String
+    private var mLocationPermissionApproved = false
+
 
     private var scanResults: List<ScanResult> = listOf();
 
@@ -197,23 +202,52 @@ class MultipleAccessPointRangingResultsActivity : AppCompatActivity() {
         mWifiRttManager = getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
 
 
+        checkIfPermissionsGranted()
         resetData()
         startRangingRequest()
     }
 
+    override fun onResume() {
+        Log.d(TAG, "onResume()")
+        super.onResume()
 
+        checkIfPermissionsGranted()
+
+//        registerReceiver(
+//            mWifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+//        )
+    }
+
+    private fun checkIfPermissionsGranted() {
+        mLocationPermissionApproved = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
     private fun startRangingRequest() {
-        // Permission for fine location should already be granted via MainActivity (you can't get
-        // to this class unless you already have permission. If they get to this class, then disable
-        // fine location permission, we kick them back to main activity.
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            finish()
+        Log.d(TAG, "Starting ranging request...")
+
+        if (mLocationPermissionApproved) {
+            Log.d(TAG, "Permission approved!")
+
+//            logToUi(getString(R.string.retrieving_access_points))
+            onPermissionsReceived()
+
+        } else {
+            Log.d(TAG, "Permission not given, starting intent to request permission")
+
+            // On 23+ (M+) devices, fine location permission not granted. Request permission.
+            val startIntent = Intent(this, LocationPermissionRequestActivity::class.java)
+            startActivity(startIntent)
         }
+
+    }
+
+    // This is checked via mLocationPermissionApproved boolean
+    @SuppressLint("MissingPermission")
+    private fun onPermissionsReceived() {
+        wifiManager.startScan()
 
         bumpNumberOfRequests()
 
