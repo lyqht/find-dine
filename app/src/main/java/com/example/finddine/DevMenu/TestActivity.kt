@@ -9,7 +9,6 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
-import kotlin.concurrent.fixedRateTimer
 
 class TestActivity : AppCompatActivity() {
     private val TAG = "TestActivity"
@@ -35,13 +34,6 @@ class TestActivity : AppCompatActivity() {
         // Initializes UI elements.
         mUserLatLngTextView = findViewById(R.id.user_latlng_value)
         mNumOfUpdatesTextView = findViewById(R.id.num_updates_value)
-
-
-        // Initialize wifiRttService
-        wifiRttService = WifiRttService(this)
-
-//        intervalUpdateLatLng()
-        wifiRttService.subscribeToUpdates(this::updateUserLatLng)
     }
 
     private fun updateUserLatLng(curUserLocation: DoubleArray) {
@@ -51,5 +43,22 @@ class TestActivity : AppCompatActivity() {
 
         mUserLatLngTextView.setText(Arrays.toString(curUserLocation))
         mNumOfUpdatesTextView.setText(mNumOfUpdates.toString())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Initialize wifiRttService
+        wifiRttService = WifiRttService(this)
+        wifiRttService.subscribeToUpdates(this::updateUserLatLng)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        wifiRttService.stopWifiRttService()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        wifiRttService.stopWifiRttService()
     }
 }

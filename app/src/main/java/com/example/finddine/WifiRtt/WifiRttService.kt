@@ -13,15 +13,17 @@ import android.net.wifi.rtt.RangingRequest
 import android.net.wifi.rtt.RangingResult
 import android.net.wifi.rtt.RangingResultCallback
 import android.net.wifi.rtt.WifiRttManager
-import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.lemmingapex.trilateration.TrilaterationFunction
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
+import java.lang.Error
 import java.util.*
+import kotlin.concurrent.schedule
 import kotlin.math.*
 
 
@@ -127,17 +129,12 @@ data class AccessPoint(
 }
 
 class WifiRttService(val context: AppCompatActivity) {
-    private var userLocation = doubleArrayOf()
     private val TAG = "APRRActivity"
 
     val SCAN_RESULT_EXTRA = "com.example.android.wifirttscan.extra.SCAN_RESULT"
 
     val EARTH_RADIUS_MM: Double = 6371008771.4
 
-    private val SAMPLE_SIZE_DEFAULT = 50
-    private val MILLISECONDS_DELAY_BEFORE_NEW_RANGING_REQUEST_DEFAULT = 1000
-
-    private lateinit var scanResult: ScanResult
     private lateinit var mMAC: String
 
     // Permissions
@@ -186,19 +183,29 @@ class WifiRttService(val context: AppCompatActivity) {
     )
     private var mMillisecondsDelayBeforeNewRangingRequest: Int = 500
 
-    private var sampleSize: Int = 0
 
     private var mWifiRttManager: WifiRttManager
     private var wifiManager: WifiManager
     private var mRttRangingResultCallback: RttRangingResultCallback = RttRangingResultCallback()
-
-    // Triggers additional RangingRequests with delay (mMillisecondsDelayBeforeNewRangingRequest).
-    internal val mRangeRequestDelayHandler = Handler()
+    private var mTimer: TimerTask? = null
+    private var stopTimer: Boolean = false
+    var myReceiver: BroadcastReceiver
 
     private lateinit var mOnUpdateHandler: (DoubleArray) -> Unit
 
     fun subscribeToUpdates(onUpdate: (DoubleArray) -> Unit) {
         mOnUpdateHandler = onUpdate
+    }
+
+    fun stopWifiRttService() {
+        Log.d(TAG, "Stop wifi rtt service")
+
+        this.stopTimer = true
+        try {
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(myReceiver)
+        } catch (e: Error) {
+            Log.d(TAG, "Could not destroy receiver", e)
+        }
     }
 
 
@@ -238,7 +245,7 @@ class WifiRttService(val context: AppCompatActivity) {
         Log.d(TAG, "registerReceiver")
 
         val filter = IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED)
-        val myReceiver = object : BroadcastReceiver() {
+        myReceiver = object : BroadcastReceiver() {
 
             override fun onReceive(context: Context, intent: Intent) {
                 Log.d(TAG, "onReceive")
@@ -247,7 +254,7 @@ class WifiRttService(val context: AppCompatActivity) {
             }
         }
 
-        context.registerReceiver(myReceiver, filter)
+        LocalBroadcastManager.getInstance(context).registerReceiver(myReceiver, filter)
         mWifiRttAvailable = mWifiRttManager.isAvailable()
 
 
@@ -273,7 +280,7 @@ class WifiRttService(val context: AppCompatActivity) {
 
             bumpNumberOfRequests()
 
-            startRangingRequest()
+            runTimerWithFunc(this::startRangingRequest)
 
         } else {
             Log.d(TAG, "Device not Wifi Rtt compatible!")
@@ -291,26 +298,32 @@ class WifiRttService(val context: AppCompatActivity) {
     // This is checked via mLocationPermissionApproved boolean
     @SuppressLint("MissingPermission")
     private fun startRangingRequest() {
+        Log.d(TAG, "startRangingRequest")
+
         val rangingRequest = RangingRequest.Builder().addAccessPoints(scanResults).build()
 
         mWifiRttManager.startRanging(
             rangingRequest, context.application.mainExecutor, mRttRangingResultCallback
         )
+
+        if (!stopTimer) {
+            runTimerWithFunc(this::startRangingRequest)
+        }
+    }
+
+    private fun runTimerWithFunc(timerFunc: () -> Unit) {
+        mTimer = Timer("startRangingRequest", false)
+            .schedule(mMillisecondsDelayBeforeNewRangingRequest.toLong()) {
+                timerFunc()
+            }
     }
 
     // Class that handles callbacks for all RangingRequests and issues new RangingRequests.
     private inner class RttRangingResultCallback : RangingResultCallback() {
 
-        private fun queueNextRangingRequest() {
-            mRangeRequestDelayHandler.postDelayed(
-                { startRangingRequest() },
-                mMillisecondsDelayBeforeNewRangingRequest.toLong()
-            )
-        }
 
         override fun onRangingFailure(code: Int) {
             Log.d(TAG, "onRangingFailure() code: $code")
-            queueNextRangingRequest()
         }
 
         override fun onRangingResults(results: List<RangingResult>) {
@@ -352,7 +365,6 @@ class WifiRttService(val context: AppCompatActivity) {
             }
 
             if (positions.size < 2) {
-                queueNextRangingRequest()
                 return
             }
 
@@ -370,7 +382,6 @@ class WifiRttService(val context: AppCompatActivity) {
             val centroidLatLng = cartesianToLatlng(centroid[0], centroid[1], centroid[2])
             Log.d(TAG, "centroidLatLng: ${Arrays.toString(centroidLatLng)}")
             mOnUpdateHandler(centroidLatLng)
-            queueNextRangingRequest()
         }
 
         private fun latlngToCartersian(lat: Double, lng: Double): DoubleArray {

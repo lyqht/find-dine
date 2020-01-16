@@ -2,7 +2,6 @@ package com.example.finddine.DevMenu
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import com.example.finddine.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -32,12 +31,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+    }
 
+    override fun onResume() {
+        super.onResume()
         // Initialize wifiRttService
         wifiRttService = WifiRttService(this)
-
-//        intervalUpdateLatLng()
         wifiRttService.subscribeToUpdates(this::updateUserLatLng)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        wifiRttService.stopWifiRttService()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        wifiRttService.stopWifiRttService()
     }
 
     /**
