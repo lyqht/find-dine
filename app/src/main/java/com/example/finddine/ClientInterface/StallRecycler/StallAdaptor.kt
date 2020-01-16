@@ -11,14 +11,13 @@ import com.example.finddine.R.layout.stall_list_item
 import kotlinx.android.synthetic.main.stall_list_item.view.*
 
 
-class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : RecyclerView.Adapter<StallAdaptor.ViewHolder>() {
+class StallAdaptor (var items : ArrayList<Stall>, val context: Context) : RecyclerView.Adapter<StallAdaptor.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return items.size
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-
         val stallName = view.stall_name
         val foodName = view.food_name
         val stallRating = view.stall_rating
@@ -52,6 +51,10 @@ class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : Recycl
             context.startActivity(intent);
         }
 
+    }
+    fun updateData(newItems: ArrayList<Stall>) {
+        items = ArrayList()
+        items.addAll(newItems)
     }
 
 }
