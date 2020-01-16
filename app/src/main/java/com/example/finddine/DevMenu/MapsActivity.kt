@@ -2,6 +2,7 @@ package com.example.finddine.DevMenu
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.finddine.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -11,12 +12,17 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var marker: Marker
+
+    // RTT Service
+    private lateinit var wifiRttService: WifiRttService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +32,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Initialize wifiRttService
+        wifiRttService = WifiRttService(this)
+
+//        intervalUpdateLatLng()
+        wifiRttService.subscribeToUpdates(this::updateUserLatLng)
     }
 
     /**
@@ -42,7 +54,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         val sandcrawler = LatLng(1.2998518673161072, 103.78911880515608)
-        map.addMarker(MarkerOptions().position(sandcrawler).title("You are here!"))
+        marker = map.addMarker(MarkerOptions().position(sandcrawler).title("You are here!"))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(sandcrawler, 22.0f))
+
+    }
+
+    private fun updateUserLatLng(curUserLocation: DoubleArray) {
+        val latLng = LatLng(curUserLocation[0], curUserLocation[1])
+        marker.position = latLng
     }
 }
