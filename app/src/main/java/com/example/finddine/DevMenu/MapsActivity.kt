@@ -10,9 +10,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -67,6 +68,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         marker = map.addMarker(MarkerOptions().position(sandcrawler).title("You are here!"))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(sandcrawler, 22.0f))
 
+        val tileProvider = object : UrlTileProvider(256, 256) {
+           @Synchronized override fun getTileUrl(x: Int, y: Int, zoom: Int): URL? {
+
+                /* Define the URL pattern for the tile images */
+                val s = String.format(
+                    "https://api.mapbox.com/v4/ijasm.974bq1q8/%d/%d/%d@2x.png?access_token=pk.eyJ1IjoiaWphc20iLCJhIjoiY2s1ZXdnMW9hMjhqejNtcG5rNGZyZnZodiJ9.qWOLNLQPCVXETV2sVNq3gw",
+                    zoom, x, y
+                )
+
+                if (!checkTileExists(x, y, zoom)) {
+                    return null
+                }
+
+                try {
+                    return URL(s)
+                } catch (e: MalformedURLException) {
+                    throw AssertionError(e)
+                }
+
+            }
+            private fun checkTileExists(x: Int, y: Int, zoom: Int): Boolean {
+                val minZoom = 12
+                val maxZoom = 32
+
+                return if (zoom < minZoom || zoom > maxZoom) {
+                    false
+                } else true
+
+            }
+        }
+        map.addTileOverlay(TileOverlayOptions().tileProvider(tileProvider))
     }
 
     private fun updateUserLatLng(curUserLocation: DoubleArray) {
