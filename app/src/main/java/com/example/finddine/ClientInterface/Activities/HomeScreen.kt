@@ -10,6 +10,7 @@ import com.example.finddine.ClientInterface.StallRecycler.Stall
 import com.example.finddine.ClientInterface.StallRecycler.StallAdaptor
 import com.example.finddine.DevMenu.MainActivity
 import com.example.finddine.DevMenu.MultipleAccessPointRangingResultsActivity
+import com.example.finddine.DevMenu.TestActivity
 import com.example.finddine.R
 import com.example.finddine.databinding.ActivityHomeScreenBinding
 
@@ -22,7 +23,7 @@ class HomeScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_screen)
         // redirect to DevMenu Button
-        val intent = Intent(this, MultipleAccessPointRangingResultsActivity::class.java)
+        val intent = Intent(this, TestActivity::class.java)
         binding.redirectButton.setOnClickListener { startActivity(intent) }
 
         // loading data and using the adaptor to create list item views for the recycler view

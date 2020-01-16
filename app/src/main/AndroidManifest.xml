@@ -46,6 +46,11 @@
             android:label="@string/title_activity_access_point_ranging_results"
             android:parentActivityName=".DevMenu.MainActivity"
             android:theme="@style/CustomAppTheme" />
+        <activity
+            android:name=".DevMenu.TestActivity"
+            android:label="@string/title_activity_access_point_ranging_results"
+            android:parentActivityName=".DevMenu.MainActivity"
+            android:theme="@style/CustomAppTheme" />
     </application>
 
 </manifest>

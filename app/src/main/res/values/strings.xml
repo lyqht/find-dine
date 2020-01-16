@@ -34,6 +34,10 @@
     <string name="get_responder_location_label_activity_access_point_ranging_results">Get responder location</string>
     <string name="mac_mismatch_message_activity_access_point_ranging_results">Callback MAC address doesn\'t match original request MAC address.</string>
 
+    <!-- Strings for TestActivity. -->
+    <string name="title_activity_test">Test Activity</string>
+    <string name="user_lat_lng">User LatLng:</string>
+
     <!-- Strings for Client Interface Home Activity. -->
     <string name="home_screen">Home Screen</string>
     <string name="change_food_centre">change</string>
