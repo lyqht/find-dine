@@ -70,6 +70,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         marker = map.addMarker(MarkerOptions().position(sandcrawler).title("You are here!"))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(sandcrawler, 22.0f))
 
+//        map.setOnMapClickListener {
+//            map.clear()
+//            map.addMarker(MarkerOptions().position(it))
+//            println(">>> location: " + it)
+//        }
+
         val tileProvider = object : UrlTileProvider(256, 256) {
            @Synchronized override fun getTileUrl(x: Int, y: Int, zoom: Int): URL? {
 
@@ -80,6 +86,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 )
 
                 if (!checkTileExists(x, y, zoom)) {
+                    print(">>> tile does not exist")
                     return null
                 }
 
