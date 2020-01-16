@@ -36,15 +36,18 @@
 
     <!-- Strings for Client Interface Home Activity. -->
     <string name="home_screen">Home Screen</string>
-    <string name="home_button">change</string>
+    <string name="change_food_centre">change</string>
+    <string name="change_food_centre_cd">change food centre</string>
     <string name="home_greeting">You are at</string>
     <string name="home_venue">Timbre+</string>
+    <string name="home_venue_cd">Timbre+ Food Centre</string>
     <string name="searchbar_hint">Search for dishes, stall or cuisine</string>
     <string name="home_recycler_view_title">Top Picks</string>
+    <string name="home_recycler_view_title_cd">Showing Top 5 Picks</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="review_stars_text">4.8 \u2605</string>
     <string name="multiple">MULTIPLE</string>
-    <string name="change_hawker">change hawker</string>
 </resources>

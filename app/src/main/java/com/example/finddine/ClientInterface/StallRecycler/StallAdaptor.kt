@@ -36,7 +36,11 @@ class StallAdaptor (val items : ArrayList<Stall>, val context: Context) : Recycl
         val item = items[position]
         val itemNum = position + 1
         holder?.stallName?.text = itemNum.toString() + ". " + item.name
+        holder?.stallName?.contentDescription = itemNum.toString() + ". stall " + item.name
+
         holder?.foodName?.text = item.food
+        holder?.foodName?.contentDescription = "famous for " + item.food
+
         holder?.stallRating?.text = item.rating.toString() + "\u2605"
         holder?.stallRating?.contentDescription = item.rating.toString() + "stars"
 
