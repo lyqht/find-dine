@@ -40,24 +40,16 @@ class TestActivity : AppCompatActivity() {
         // Initialize wifiRttService
         wifiRttService = WifiRttService(this)
 
-        intervalUpdateLatLng()
+//        intervalUpdateLatLng()
+        wifiRttService.subscribeToUpdates(this::updateUserLatLng)
     }
 
-    private fun updateUserLatLng() {
-        val curUserLocation = wifiRttService.getUserLocation()
+    private fun updateUserLatLng(curUserLocation: DoubleArray) {
         Log.d(TAG, "curUserLocation: ${Arrays.toString(curUserLocation)}")
 
         mNumOfUpdates++
 
         mUserLatLngTextView.setText(Arrays.toString(curUserLocation))
         mNumOfUpdatesTextView.setText(mNumOfUpdates.toString())
-        intervalUpdateLatLng()
-    }
-
-    private fun intervalUpdateLatLng() {
-        mUpdateLatLngHandler.postDelayed(
-            { updateUserLatLng() },
-            mMillisecondsDelayBeforeLatLngUpdate.toLong()
-        )
     }
 }

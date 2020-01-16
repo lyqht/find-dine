@@ -195,8 +195,10 @@ class WifiRttService(val context: AppCompatActivity) {
     // Triggers additional RangingRequests with delay (mMillisecondsDelayBeforeNewRangingRequest).
     internal val mRangeRequestDelayHandler = Handler()
 
-    fun getUserLocation(): DoubleArray {
-        return userLocation
+    private lateinit var mOnUpdateHandler: (DoubleArray) -> Unit
+
+    fun subscribeToUpdates(onUpdate: (DoubleArray) -> Unit) {
+        mOnUpdateHandler = onUpdate
     }
 
 
@@ -349,6 +351,11 @@ class WifiRttService(val context: AppCompatActivity) {
                 }
             }
 
+            if (positions.size < 2) {
+                queueNextRangingRequest()
+                return
+            }
+
             val solver = NonLinearLeastSquaresSolver(
                 TrilaterationFunction(positions.toTypedArray(), distances.toDoubleArray()),
                 LevenbergMarquardtOptimizer()
@@ -362,7 +369,7 @@ class WifiRttService(val context: AppCompatActivity) {
             // TODO: change to continuously return current centroid
             val centroidLatLng = cartesianToLatlng(centroid[0], centroid[1], centroid[2])
             Log.d(TAG, "centroidLatLng: ${Arrays.toString(centroidLatLng)}")
-            userLocation = centroidLatLng
+            mOnUpdateHandler(centroidLatLng)
             queueNextRangingRequest()
         }
 
