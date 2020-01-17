@@ -18,6 +18,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.finddine.WifiRtt.SvyConvert.LatLonCoordinate
+import com.example.finddine.WifiRtt.SvyConvert.SVY21Coordinate
 import com.lemmingapex.trilateration.TrilaterationFunction
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
@@ -341,7 +343,7 @@ class WifiRttService(val context: AppCompatActivity) {
                 val macAddress = result.macAddress!!.toString()
                 val accessPoint = locationOfAPs.find { AP -> AP.macAddress == macAddress } ?: return
 
-                if (result.status == RangingResult.STATUS_SUCCESS) {
+                if (result.status == RangingResult.STATUS_SUCCESS && result.distanceMm >= 0) {
 
                     accessPoint.numberOfSuccessRequests++
 //                    Add distance to this AP's history
@@ -364,6 +366,9 @@ class WifiRttService(val context: AppCompatActivity) {
 
             locationOfAPs.forEach { ap ->
                 if (ap.hasDistanceHistory()) {
+                    Log.d(TAG, ">>> lat: ${ap.latitude}, lng: ${ap.longitude}")
+                    Log.d(TAG, ">>> converted: ${Arrays.toString(latlngToCartersian(ap.latitude, ap.longitude))}")
+
                     positions.add(
                         latlngToCartersian(ap.latitude, ap.longitude)
                     )
@@ -376,6 +381,8 @@ class WifiRttService(val context: AppCompatActivity) {
                 return
             }
 
+
+
             val solver = NonLinearLeastSquaresSolver(
                 TrilaterationFunction(positions.toTypedArray(), distances.toDoubleArray()),
                 LevenbergMarquardtOptimizer()
@@ -387,7 +394,9 @@ class WifiRttService(val context: AppCompatActivity) {
             var centroid = optimum.getPoint().toArray();
 
             // TODO: change to continuously return current centroid
-            val centroidLatLng = cartesianToLatlng(centroid[0], centroid[1], centroid[2])
+//            val centroidLatLng = cartesianToLatlng(centroid[0], centroid[1], centroid[2])
+            val centroidLatLng = cartesianToLatlng(centroid[0], centroid[1], null)
+
             Log.d(TAG, "centroidLatLng: ${Arrays.toString(centroidLatLng)}")
             mOnUpdateHandler(centroidLatLng)
         }
@@ -399,26 +408,35 @@ class WifiRttService(val context: AppCompatActivity) {
 //
 //            z = R *sin(lat)
 
-            val latRads = (90 - lat) * Math.PI / 180
-            val lngRads = (180 - lng) * Math.PI / 180
-            val xPos = EARTH_RADIUS_MM * sin(latRads) * cos(lngRads)
-            val yPos = EARTH_RADIUS_MM * cos(latRads)
-            val zPos = EARTH_RADIUS_MM * sin(latRads) * sin(lngRads)
+            val latLngCoordinate = LatLonCoordinate(lat, lng)
 
-            return doubleArrayOf(xPos, yPos, zPos)
+            return doubleArrayOf(latLngCoordinate.asSVY21().northing, latLngCoordinate.asSVY21().easting)
+//
+//            val latRads = (90 - lat) * Math.PI / 180
+//            val lngRads = (180 - lng) * Math.PI / 180
+//            val xPos = EARTH_RADIUS_MM * sin(latRads) * cos(lngRads)
+//            val yPos = EARTH_RADIUS_MM * cos(latRads)
+//            val zPos = EARTH_RADIUS_MM * sin(latRads) * sin(lngRads)
+//
+//            return doubleArrayOf(xPos, yPos, zPos)
         }
 
-        private fun cartesianToLatlng(xPos: Double, yPos: Double, zPos: Double): DoubleArray {
+        private fun cartesianToLatlng(xPos: Double, yPos: Double, zPos: Double?): DoubleArray {
 //            lat = asin(z / R)
 //            lon = atan2(y, x)
 
-            val latRads = acos(yPos / EARTH_RADIUS_MM)
-            val lngRads = atan2(zPos, xPos)
 
-            val lat = (Math.PI / 2 - latRads) * (180 / Math.PI)
-            val lng = (Math.PI - lngRads) * (180 / Math.PI)
+            val svy21Coordinate = SVY21Coordinate(xPos, yPos)
 
-            return doubleArrayOf(lat, lng)
+            return doubleArrayOf(svy21Coordinate.asLatLon().latitude, svy21Coordinate.asLatLon().longitude)
+
+//            val latRads = acos(yPos / EARTH_RADIUS_MM)
+//            val lngRads = atan2(zPos, xPos)
+//
+//            val lat = (Math.PI / 2 - latRads) * (180 / Math.PI)
+//            val lng = (Math.PI - lngRads) * (180 / Math.PI)
+//
+//            return doubleArrayOf(lat, lng)
         }
     }
 }
