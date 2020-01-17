@@ -67,13 +67,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         val sandcrawler = LatLng(1.2998518673161072, 103.78911880515608)
-        marker = map.addMarker(MarkerOptions().position(sandcrawler).title("You are here!"))
+        marker = map.addMarker(MarkerOptions()
+            .position(sandcrawler).title("You are here!")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(sandcrawler, 22.0f))
 
-//        map.setOnMapClickListener {
-//            map.clear()
-//            map.addMarker(MarkerOptions().position(it))
-//            println(">>> location: " + it)
+        for (location in WifiRttService.locationOfAPs) {
+            val latlng = LatLng(location.latitude, location.longitude)
+            map.addMarker(MarkerOptions().position(latlng).title(location.name))
+        }
+
+        map.setOnMapClickListener {
+             map.addMarker(MarkerOptions().position(it).title("location:" + it))
+            println(">>> location: " + it)
+        }
+//
+//        map.setOnMarkerClickListener {
+//            println(">>> marker location: " + it.title)
+//            true
 //        }
 
         val tileProvider = object : UrlTileProvider(256, 256) {
@@ -81,7 +92,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 /* Define the URL pattern for the tile images */
                 val s = String.format(
-                    "https://api.mapbox.com/v4/ijasm.974bq1q8/%d/%d/%d@2x.png?access_token=pk.eyJ1IjoiaWphc20iLCJhIjoiY2s1ZXdnMW9hMjhqejNtcG5rNGZyZnZodiJ9.qWOLNLQPCVXETV2sVNq3gw",
+                    "https://api.mapbox.com/v4/ijasm.424vam0f/%d/%d/%d@2x.png?access_token=pk.eyJ1IjoiaWphc20iLCJhIjoiY2s1ZXdnMW9hMjhqejNtcG5rNGZyZnZodiJ9.qWOLNLQPCVXETV2sVNq3gw",
                     zoom, x, y
                 )
 

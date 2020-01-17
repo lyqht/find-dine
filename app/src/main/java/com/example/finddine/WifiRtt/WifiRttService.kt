@@ -143,8 +143,9 @@ class WifiRttService(val context: AppCompatActivity) {
 
 
     private var scanResults: List<ScanResult> = listOf();
+    companion object {
 
-    private var locationOfAPs: List<AccessPoint> = listOf(
+    var locationOfAPs: List<AccessPoint> = listOf(
         AccessPoint(
             name = "AP1",
             location = "Entrance",
@@ -177,10 +178,11 @@ class WifiRttService(val context: AppCompatActivity) {
             name = "AP5",
             location = "Nest Wifi",
             macAddress = "cc:f4:11:0a:b8:41",
-            latitude = 1.300035,
-            longitude = 103.789334
-        )
-    )
+            latitude = 1.2999823163346869,
+            longitude = 103.78925833851099
+        ))
+
+    }
     private var mMillisecondsDelayBeforeNewRangingRequest: Int = 500
 
 
