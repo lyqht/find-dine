@@ -373,7 +373,7 @@ class WifiRttService(val context: AppCompatActivity) {
                         latlngToCartersian(ap.latitude, ap.longitude)
                     )
 
-                    distances.add(ap.getDistanceMean())
+                    distances.add(ap.getDistanceMean()/1000)
                 }
             }
 
