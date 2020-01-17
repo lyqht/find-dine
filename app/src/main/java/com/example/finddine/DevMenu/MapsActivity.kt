@@ -77,10 +77,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             map.addMarker(MarkerOptions().position(latlng).title(location.name))
         }
 
-        map.setOnMapClickListener {
-             map.addMarker(MarkerOptions().position(it).title("location:" + it))
-            println(">>> location: " + it)
-        }
+//        map.setOnMapClickListener {
+//             map.addMarker(MarkerOptions().position(it).title("location:" + it))
+//            println(">>> location: " + it)
+//        }
 //
 //        map.setOnMarkerClickListener {
 //            println(">>> marker location: " + it.title)
