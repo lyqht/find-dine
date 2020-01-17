@@ -2,8 +2,8 @@ package com.example.finddine.ClientInterface.Activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.util.Log
-import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.finddine.ClientInterface.StallRecycler.Stall
 import com.example.finddine.ClientInterface.StallRecycler.StallAdaptor
 import com.example.finddine.DevMenu.TestActivity
-import com.example.finddine.DevMenu.MapsActivity
 import com.example.finddine.R
 import com.example.finddine.databinding.ActivityHomeScreenBinding
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class HomeScreen : AppCompatActivity() {
 
@@ -35,16 +37,18 @@ class HomeScreen : AppCompatActivity() {
         binding.homeRecyclerView.adapter = StallAdaptor(queryResults, this)
 
         val searchQuery = binding.homeSearchView.query
+
         binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
+
 //                Log.d("QueryText Focus Change", "Triggered") // is triggered
                 if (searchQuery.length == 0) {
                     queryResults = stalls
                 } else if (searchQuery.length > 0) {
                     queryResults = ArrayList()
                     val toAdd = stalls.filter {
-                        it.name.toLowerCase().contains(searchQuery) or it.food.toLowerCase().contains(searchQuery)
+                        it.name.toLowerCase().contains(searchQuery.toString().toLowerCase()) or it.food.toLowerCase().contains(searchQuery.toString().toLowerCase())
                     } as ArrayList<Stall>
                     queryResults.addAll(toAdd)
 
