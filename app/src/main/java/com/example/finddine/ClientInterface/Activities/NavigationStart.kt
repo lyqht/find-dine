@@ -23,8 +23,15 @@ class NavigationStart : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation_start)
         val extra: Bundle? = getIntent().getExtras()
         val stall_name = extra?.getString("name")
-        binding.directionsText.setText("Directions to " + stall_name)
+
+        val navigationTitle = "Directions to " + stall_name
+        binding.directionsText.setText(navigationTitle)
         setInstructions()
+
+        var mapIntent = Intent(this, MapsActivity::class.java)
+        binding.mapButton.setOnClickListener { startActivity(mapIntent) }
+
+        binding.instructionText.contentDescription = navigationTitle + ". " +  getString(R.string.find_best_route)
 
         binding.navigationExitText.setOnClickListener { finish() }
         binding.refreshButton.setOnClickListener {

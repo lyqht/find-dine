@@ -28,10 +28,6 @@ class HomeScreen : AppCompatActivity() {
         val intent = Intent(this, TestActivity::class.java)
         binding.redirectButton.setOnClickListener { startActivity(intent) }
 
-
-        var mapIntent = Intent(this, MapsActivity::class.java)
-        binding.mapButton.setOnClickListener { startActivity(mapIntent) }
-
         // loading data and using the adaptor to create list item views for the recycler view
         addStalls()
         queryResults = stalls

@@ -47,7 +47,8 @@
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:importantForAccessibility="no"/>
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -85,12 +86,11 @@
 
         <Button
             android:id="@+id/map_button"
-            android:importantForAccessibility="no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:strokeColor="@android:color/black"
             app:strokeWidth="2sp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             android:text="Map"
             android:backgroundTint="@android:color/white"
